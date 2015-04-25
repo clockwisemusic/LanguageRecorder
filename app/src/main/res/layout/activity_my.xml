@@ -1,0 +1,74 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/myimageview" />
+
+    <EditText android:id="@+id/edit_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:hint="@string/edit_message"></EditText>
+
+    <LinearLayout
+        android:id="@+id/audiobuttons"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <Button
+            android:id="@+id/recordbutton"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+
+            android:text="@string/btn_send"
+            android:onClick="recordButton"></Button>
+        <Button
+            android:id="@+id/playbutton"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:text="Play"
+            android:onClick="playButton"></Button>
+        <Button
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"
+            android:text="Stop"
+            android:id="@+id/stopbutton"
+            android:onClick="stopButton"
+            >
+
+        </Button>
+    </LinearLayout>
+   <LinearLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <Button
+            android:onClick="backButton"
+            android:id="@+id/backbutton"
+            android:text="Back"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"></Button>
+        <Button
+            android:onClick="nextButton"
+            android:id="@+id/nextbutton"
+            android:text="Next"
+            android:layout_alignParentRight="true"
+            android:layout_width="96dp"
+            android:layout_height="wrap_content"></Button>
+    </LinearLayout>
+<!--
+    <TextView android:text="@string/hello_world"
+        android:textSize="12pt" android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+-->
+</LinearLayout>
