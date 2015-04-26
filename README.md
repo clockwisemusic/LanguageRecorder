@@ -1,3 +1,3 @@
-# LanguageRecorder
+# Language Recorder
 Records Language.
-Just a prototype application at the moment.
+Just a prototype application.
