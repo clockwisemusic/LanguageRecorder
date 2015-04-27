@@ -1,11 +1,15 @@
 package com.example.lachlan.myfirstapp;
 
 import android.content.Intent;
+import android.os.Environment;
+import android.os.StatFs;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import java.text.DecimalFormat;
 
 
 public class DisplayMessageActivity extends ActionBarActivity {
@@ -13,16 +17,23 @@ public class DisplayMessageActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Intent intent = getIntent();
+
+/*        Intent intent = getIntent();
         String message = intent.getStringExtra(MyActivity.EXTRA_MESSAGE);
+*/
+
+        String diskSpace = DiskSpace.totalDiskSpace();
+        String freeSpace = DiskSpace.totalAvailableDiskSpace();
 
         TextView textView = new TextView(this);
-        textView.setTextSize(40);
-        textView.setText(message);
+        textView.setTextSize(24);
+        textView.setPadding(16,16,16,16);
+        textView.setText("Total disk size: " + diskSpace + "\n" +
+                "Total used space: " + freeSpace);
+
         setContentView(textView);
         //setContentView(R.layout.activity_display_message);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

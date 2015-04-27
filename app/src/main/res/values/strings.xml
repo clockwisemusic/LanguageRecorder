@@ -4,7 +4,7 @@
     <string name="action_settings">Settings</string>
     <string name="edit_message">Please enter the name</string>
     <string name="btn_send">Record</string>
-    <string name="title_activity_display_message">My Message</string>
+    <string name="title_activity_display_message">Disk Info</string>
 
     <string name="hello_world">Hello world!</string>
 </resources>
