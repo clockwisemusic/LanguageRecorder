@@ -7,4 +7,17 @@
     <string name="title_activity_display_message">Disk Info</string>
 
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_disk_info">DiskInfo</string>
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
+
+    <string name="title_activity_fullscreen">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+
+    <string-array name="planets_array">
+        <item>John Smith</item>
+        <item>Peter Smitherson</item>
+        <item>Ben Johnson</item>
+    </string-array>
 </resources>

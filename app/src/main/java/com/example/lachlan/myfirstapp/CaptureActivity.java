@@ -14,7 +14,7 @@ import android.media.MediaPlayer;
 import java.io.IOException;
 
 
-public class MyActivity extends ActionBarActivity {
+public class CaptureActivity extends ActionBarActivity {
 
     public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
 
@@ -39,7 +39,7 @@ public class MyActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my);
+        setContentView(R.layout.activity_capture);
 
         stopbutton = (Button)findViewById(R.id.stopbutton);
         recordbutton = (Button)findViewById(R.id.recordbutton);
