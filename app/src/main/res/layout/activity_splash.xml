@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     tools:context="com.example.lachlan.myfirstapp.SplashActivity">
 
         <LinearLayout
@@ -11,8 +13,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/splashLogoImageView" />
+
             <TextView android:text="Language Recorder"
                 android:paddingBottom="20px"
+                android:textSize="12pt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

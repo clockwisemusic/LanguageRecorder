@@ -6,6 +6,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 
 
 public class SplashActivity extends ActionBarActivity {
@@ -16,6 +17,10 @@ public class SplashActivity extends ActionBarActivity {
         setContentView(R.layout.activity_splash);
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
+
+        ImageView imageView = (ImageView) findViewById(R.id.splashLogoImageView);
+        imageView.setImageResource(R.drawable.livru_timor_logo);
+
     }
 
 
