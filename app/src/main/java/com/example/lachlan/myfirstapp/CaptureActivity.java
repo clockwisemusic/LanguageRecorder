@@ -56,7 +56,7 @@ public class CaptureActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_my, menu);
+        //getMenuInflater().inflate(R.menu.menu_my, menu);
         return true;
     }
 
@@ -67,17 +67,6 @@ public class CaptureActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Intent intent = new Intent(this, SettingsActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        if (id == R.id.action_info) {
-            Intent intent = new Intent(this, DisplayMessageActivity.class);
-            startActivity(intent);
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -173,12 +162,6 @@ public class CaptureActivity extends ActionBarActivity {
 
     }
 
-    private String getFilename() {
-        String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audiorecordtest" + picture + ".3gp";
-        return mFileName;
-
-    }
 
     private void startPlaying()
     {
@@ -190,7 +173,8 @@ public class CaptureActivity extends ActionBarActivity {
                                                             handleStopButton();
                                                         }
                                                     });
-            mPlayer.setDataSource(getFilename());
+            String filename = DiskSpace.getFilename(picture);
+            mPlayer.setDataSource(filename);
             mPlayer.prepare();
             mPlayer.start();
         } catch (IOException e) {
@@ -209,7 +193,10 @@ public class CaptureActivity extends ActionBarActivity {
         mRecorder = new MediaRecorder();
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(getFilename());
+
+        String filename = DiskSpace.getFilename(picture);
+
+        mRecorder.setOutputFile(filename);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
