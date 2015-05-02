@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 
+
 public class HomeActivity extends ActionBarActivity {
 
     @Override
@@ -60,6 +61,11 @@ public class HomeActivity extends ActionBarActivity {
     public void startButton(android.view.View view) {
         Intent intent = new Intent(this, CaptureActivity.class);
         startActivity(intent);
-
     }
+
+    public void newPersonButton(android.view.View view) {
+        Intent intent = new Intent(this, PersonActivity.class);
+        startActivity(intent);
+    }
+
 }

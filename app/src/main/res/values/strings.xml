@@ -20,4 +20,5 @@
         <item>Peter Smitherson</item>
         <item>Ben Johnson</item>
     </string-array>
+    <string name="title_activity_person">PersonActivity</string>
 </resources>
