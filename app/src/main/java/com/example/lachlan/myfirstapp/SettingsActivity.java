@@ -22,9 +22,7 @@ import java.io.FileInputStream;
 
 public class SettingsActivity extends ActionBarActivity {
 
-    final static private String PREFS_NAME = "MyPrefsFile";
-    final static private String APP_KEY = "3gn74ckos6jhrop";
-    final static private String APP_SECRET = "";
+    final static public String PREFS_NAME = "MyPrefsFile";
 
     // In the class declaration section:
     private DropboxAPI<AndroidAuthSession> mDBApi;
@@ -57,7 +55,7 @@ public class SettingsActivity extends ActionBarActivity {
         loggedIn(false);
 
 
-        AppKeyPair pair = new AppKeyPair(APP_KEY, APP_SECRET);
+        AppKeyPair pair = new AppKeyPair(DropBoxSettings.APP_KEY, DropBoxSettings.APP_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(pair);
         mDBApi = new DropboxAPI<AndroidAuthSession>(session);
     }
