@@ -139,26 +139,46 @@ public class SettingsActivity extends ActionBarActivity {
 
     public void uploadFile(android.view.View view)
     {
+        dropboxAccessToken.setText("Uploading...");
+
+        uploadFileButton.setEnabled(false);
+
         new Thread(new Runnable() {
             public void run() {
 
                 try {
-                    String filename = DiskSpace.getFilename(1);
-                    File file = new File(filename);
-                    FileInputStream inputStream = new FileInputStream(file);
-                    DropboxAPI.Entry response = mDBApi.putFile("/audio1.3gp", inputStream,
-                            file.length(), null, null);
 
-                    Log.i("DbExampleLog", "The uploaded file's rev is: " + response.rev);
+                    for (int i=1;i<=5;i++) {
 
-                    //dropboxAccessToken.post(new Runnable() {
-                     //   public void run() {
-                      //      dropboxAccessToken.setText("File uploaded!");
-                       // }
-                    //});
+                        String filename = DiskSpace.getFilename(i);
+                        File file = new File(filename);
+
+                        if (file.exists()) {
+                            FileInputStream inputStream = new FileInputStream(file);
+
+                            DropboxAPI.Entry response = mDBApi.putFileOverwrite(
+                                    "/audio-" + i + ".3gp", inputStream, file.length(), null);
+
+                            //Log.i("DbExampleLog", "The uploaded file's rev is: " + response.rev);
+                        }
+                    }
+
+                    dropboxAccessToken.post(new Runnable() {
+                        public void run() {
+                            dropboxAccessToken.setText("File uploaded!");
+                            uploadFileButton.setEnabled(true);
+                        }
+                    });
                 }
                 catch (Exception e2) {
-                    Log.i("DbExample.log", "An exception occured: " + e2.toString());
+                    Log.e("DbExampleLog", e2.toString());
+
+                    dropboxAccessToken.post(new Runnable() {
+                        public void run() {
+                            dropboxAccessToken.setText("An error occured...");
+                            uploadFileButton.setEnabled(true);
+                        }
+                    });
                 }
             }
         }).start();

@@ -1,8 +1,14 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
     android:paddingLeft="16dp"
     android:paddingRight="16dp">
 
@@ -18,8 +24,8 @@
         android:hint="@string/edit_message"></EditText>
 
     <LinearLayout
-        android:id="@+id/audiobuttons"
         android:gravity="center"
+        android:id="@+id/audiobuttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
@@ -29,7 +35,9 @@
             android:layout_height="wrap_content"
 
             android:text="@string/btn_send"
-            android:onClick="recordButton"></Button>
+            android:onClick="recordButton">
+
+        </Button>
         <Button
             android:id="@+id/playbutton"
             android:layout_width="96dp"
@@ -72,3 +80,4 @@
         android:layout_height="wrap_content" />
 -->
 </LinearLayout>
+</ScrollView>

@@ -5,6 +5,7 @@
     android:gravity="center"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
+    android:background="#000000"
     tools:context="com.example.lachlan.myfirstapp.SplashActivity">
 
         <LinearLayout
@@ -19,6 +20,7 @@
                 android:id="@+id/splashLogoImageView" />
 
             <TextView android:text="Language Recorder"
+                android:textColor="#ffffff"
                 android:paddingBottom="20px"
                 android:textSize="12pt"
                 android:layout_width="wrap_content"
