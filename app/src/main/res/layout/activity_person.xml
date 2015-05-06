@@ -21,59 +21,151 @@
     <EditText
         android:id="@+id/nameEditText"
         android:singleLine="true"
-        android:hint="John Smith"
+        android:hint=""
         android:inputType="textNoSuggestions"
         android:layout_marginBottom="10px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView android:text="Gender"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <Spinner
-        android:layout_marginBottom="20px"
-        android:id="@+id/gender_spinner"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"/>
+        android:orientation="horizontal">
+       <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <TextView android:text="Age"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+           <TextView android:text="Age"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/ageEditText"
-        android:singleLine="true"
-        android:hint="40"
-        android:inputType="number"
-        android:layout_marginBottom="10px"
+           <EditText
+               android:id="@+id/ageEditText"
+               android:singleLine="true"
+               android:inputType="number"
+               android:layout_marginBottom="10px"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView android:text="Gender"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <Spinner
+                android:layout_marginBottom="20px"
+                android:id="@+id/gender_spinner"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"/>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <TextView android:text="Lives in"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/locationEditText"
-        android:singleLine="true"
-        android:hint="Melbourne"
-        android:layout_marginBottom="10px"
-        android:inputType="textNoSuggestions"
+            <TextView android:text="Lives in"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:id="@+id/locationEditText"
+                android:singleLine="true"
+                android:layout_marginBottom="10px"
+                android:inputType="textNoSuggestions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+
+            <TextView android:text="For number of years"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <EditText
+                android:singleLine="true"
+                android:inputType="number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <TextView android:text="Years lived here for"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <EditText
-        android:singleLine="true"
-        android:inputType="number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <TextView android:text="First language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
-    <TextView android:text="Educated to"
+            <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/autocomplete_first_language"
+                android:singleLine="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            >
+            <TextView android:text="Other language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/autocomplete_other_language"
+                android:singleLine="true"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+
+        android:layout_marginTop="20px"
+        android:text="Educated to"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -83,25 +175,6 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"/>
 
-    <TextView android:text="First language"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/autocomplete_first_language"
-        android:singleLine="true"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
-
-    <TextView android:text="Other language"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/autocomplete_other_language"
-        android:singleLine="true"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
 
     <Button
         android:layout_marginTop="20px"

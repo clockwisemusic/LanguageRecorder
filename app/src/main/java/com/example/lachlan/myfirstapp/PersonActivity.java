@@ -35,8 +35,8 @@ public class PersonActivity extends ActionBarActivity {
         genderSpinner = (Spinner)findViewById(R.id.gender_spinner);
         educatedToSpinner = (Spinner)findViewById(R.id.educated_to_spinner);
 
-        String[] genders = { "Male", "Female" };
-        String[] educatedTo = { "Primary", "Secondary", "University" };
+        String[] genders = { "", "Male", "Female" };
+        String[] educatedTo = { "", "Primary", "Secondary", "University" };
         String[] languages = getResources().getStringArray(R.array.languages_array);
 
         ArrayAdapter<String> genderSpinnerAdapter = new ArrayAdapter<String>(this,
