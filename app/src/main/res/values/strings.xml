@@ -15,10 +15,13 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string-array name="planets_array">
-        <item>John Smith</item>
-        <item>Peter Smitherson</item>
-        <item>Ben Johnson</item>
+    <string-array name="languages_array">
+        <item>english</item>
+        <item>french</item>
+        <item>german</item>
+        <item>italian</item>
+        <item>japanese</item>
+        <item>korean</item>
     </string-array>
     <string name="title_activity_person">PersonActivity</string>
 </resources>

@@ -1,5 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -9,44 +14,102 @@
     android:orientation="vertical"
     tools:context="com.example.lachlan.myfirstapp.PersonActivity">
 
-
     <TextView android:text="Name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <EditText
+        android:id="@+id/nameEditText"
         android:singleLine="true"
         android:hint="John Smith"
+        android:inputType="textNoSuggestions"
         android:layout_marginBottom="10px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <TextView android:text="Gender"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:layout_marginBottom="20px"
+        android:id="@+id/gender_spinner"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
 
     <TextView android:text="Age"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <EditText
+        android:id="@+id/ageEditText"
         android:singleLine="true"
         android:hint="40"
+        android:inputType="number"
         android:layout_marginBottom="10px"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <TextView android:text="Location"
+    <TextView android:text="Lives in"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/locationEditText"
+        android:singleLine="true"
+        android:hint="Melbourne"
+        android:layout_marginBottom="10px"
+        android:inputType="textNoSuggestions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView android:text="Years lived here for"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <EditText
         android:singleLine="true"
-        android:hint="Melbourne"
-        android:layout_marginBottom="10px"
+        android:inputType="number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button android:layout_width="wrap_content"
+    <TextView android:text="Educated to"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Spinner
+        android:layout_marginBottom="20px"
+        android:id="@+id/educated_to_spinner"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"/>
+
+    <TextView android:text="First language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/autocomplete_first_language"
+        android:singleLine="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView android:text="Other language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/autocomplete_other_language"
+        android:singleLine="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:layout_marginTop="20px"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="okButton"
         android:text="Ok" ></Button>
 
 </LinearLayout>
+
+</ScrollView>

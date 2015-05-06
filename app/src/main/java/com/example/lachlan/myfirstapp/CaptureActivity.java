@@ -12,8 +12,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
-import java.io.IOException;
 
+import com.example.lachlan.myfirstapp.code.DiskSpace;
+
+import java.io.IOException;
 
 public class CaptureActivity extends ActionBarActivity {
 

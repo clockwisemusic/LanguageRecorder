@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import com.example.lachlan.myfirstapp.code.DatabaseHelper;
 
 
 public class HomeActivity extends ActionBarActivity {
@@ -18,15 +19,22 @@ public class HomeActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Spinner spinner = (Spinner) findViewById(R.id.planets_spinner);
+        Spinner spinner = (Spinner) findViewById(R.id.person_spinner);
+
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+
+        String[] people = db.getPeople();
 
 // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.planets_array, android.R.layout.simple_spinner_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, people);
+
 // Specify the layout to use when the list of choices appears
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
 // Apply the adapter to the spinner
         spinner.setAdapter(adapter);
+
     }
 
 

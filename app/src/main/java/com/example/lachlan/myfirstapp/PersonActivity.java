@@ -5,13 +5,57 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.Spinner;
+
+import com.example.lachlan.myfirstapp.code.DatabaseHelper;
 
 public class PersonActivity extends ActionBarActivity {
+
+    private EditText nameEditText;
+    private EditText ageEditText;
+    private EditText locationEditText;
+    private AutoCompleteTextView firstLanguageAutocomplete;
+    private AutoCompleteTextView otherLanguageAutocomplete;
+    private Spinner genderSpinner;
+    private Spinner educatedToSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
+
+        nameEditText = (EditText)findViewById(R.id.nameEditText);
+        ageEditText = (EditText)findViewById(R.id.ageEditText);
+        locationEditText = (EditText)findViewById(R.id.locationEditText);
+        firstLanguageAutocomplete = (AutoCompleteTextView)findViewById(R.id.autocomplete_first_language);
+        otherLanguageAutocomplete = (AutoCompleteTextView)findViewById(R.id.autocomplete_other_language);
+        genderSpinner = (Spinner)findViewById(R.id.gender_spinner);
+        educatedToSpinner = (Spinner)findViewById(R.id.educated_to_spinner);
+
+        String[] genders = { "Male", "Female" };
+        String[] educatedTo = { "Primary", "Secondary", "University" };
+        String[] languages = getResources().getStringArray(R.array.languages_array);
+
+        ArrayAdapter<String> genderSpinnerAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, genders);
+
+        ArrayAdapter<String> educatedToSpinnerAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, educatedTo);
+
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, languages);
+
+        genderSpinner.setAdapter(genderSpinnerAdapter);
+        educatedToSpinner.setAdapter(educatedToSpinnerAdapter);
+
+        firstLanguageAutocomplete.setAdapter(adapter);
+        otherLanguageAutocomplete.setAdapter(adapter);
+
+        getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
     }
 
 
@@ -36,8 +80,27 @@ public class PersonActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     public void okButton(android.view.View view) {
-        Intent intent = new Intent(this, HomeActivity.class);
-        startActivity(intent);
+
+        String name = nameEditText.getText().toString();
+        String age = ageEditText.getText().toString();
+        String location = locationEditText.getText().toString();
+
+
+        if (    age.trim().length() > 0 &&
+                name.trim().length() > 0 &&
+                location.trim().length() > 0) {
+
+            DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+
+
+            int personAge = Integer.parseInt(age);
+
+            db.insertPerson(name, personAge, location);
+
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        }
     }
 }

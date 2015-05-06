@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
-import com.dropbox.client2.session.TokenPair;
-import com.dropbox.client2.session.WebAuthSession;
+import com.example.lachlan.myfirstapp.code.DiskSpace;
+import com.example.lachlan.myfirstapp.code.DropBoxSettings;
 
 import java.io.File;
 import java.io.FileInputStream;
