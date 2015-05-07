@@ -23,7 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <LinearLayout
             android:paddingTop="40px"
             android:paddingBottom="0px"
@@ -37,22 +36,28 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
+
             <Button android:text="edit"
+                android:onClick="editPersonButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
             </Button>
+
         </LinearLayout>
 
-        <Button
-            android:onClick="newPersonButton"
-            android:text="Add new person"
-            android:id="@+id/add_person"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <Button
+        android:onClick="newPersonButton"
+        android:text="Add new person"
+        android:id="@+id/add_person"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:paddingTop="50px"
+        android:paddingBottom="50px"
         android:layout_marginTop="100px"
         android:layout_width="128dp"
         android:layout_height="wrap_content"

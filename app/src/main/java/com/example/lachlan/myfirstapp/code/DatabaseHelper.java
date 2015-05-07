@@ -22,9 +22,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     String createPersonTable = "create table " + PERSON_TABLE_NAME + " " +
             "(personid integer primary key autoincrement," +
-            "name varchar," +
-            "age integer," +
-            "location varchar);";
+            "name varchar, " +
+            "age integer, " +
+            "gender varchar, "  +
+            "livesin varchar, "  +
+            "livesinyears integer, "  +
+            "firstlanguage varchar, "  +
+            "secondlanguage varchar, "  +
+            "thirdlanguage varchar, "  +
+            "otherlanguages varchar, "  +
+            "education varchar);";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -41,38 +48,102 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public void insertPerson(String name, int age, String location) {
-
-        ContentValues values = new ContentValues();
-        values.put("name", name);
-        values.put("age", age);
-        values.put("location", location);
+    public void insertPerson(Person person) {
 
         SQLiteDatabase db = this.getWritableDatabase();
+//        db.execSQL("drop table person;");
+//       db.execSQL(createPersonTable);
+
+        ContentValues values = new ContentValues();
+        values.put("name", person.name  );
+        values.put("age", person.age);
+        values.put("gender", person.gender);
+        values.put("livesin", person.livesin);
+        values.put("livesinyears", person.livesinyears);
+        values.put("firstlanguage", person.firstlanguage);
+        values.put("secondlanguage", person.secondlanguage);
+        values.put("thirdlanguage", person.thirdlanguage);
+        values.put("otherlanguages", person.otherlanguages);
+        values.put("education", person.education);
+
         db.insert(PERSON_TABLE_NAME, null, values);
 
     }
 
-    public String[] getPeople() {
+    public void updatePerson(Person person) {
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("name", person.name  );
+        values.put("age", person.age);
+        values.put("gender", person.gender);
+        values.put("livesin", person.livesin);
+        values.put("livesinyears", person.livesinyears);
+        values.put("firstlanguage", person.firstlanguage);
+        values.put("secondlanguage", person.secondlanguage);
+        values.put("thirdlanguage", person.thirdlanguage);
+        values.put("otherlanguages", person.otherlanguages);
+        values.put("education", person.education);
 
-        Cursor c = db.rawQuery("select name from " + PERSON_TABLE_NAME, null);
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.update(PERSON_TABLE_NAME, values, "personid = " + String.valueOf(person.personid), null);
 
-        List<String> items = new ArrayList<String>();
-
-        while (c.moveToNext()) {
-            items.add(c.getString(0));
-        }
-
-        return (String[]) items.toArray(new String[items.size()]);
     }
 
-    public Cursor getPeopleCursor() {
+    public Person[] getPeople() {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        return db.rawQuery("select name from " + PERSON_TABLE_NAME, null);
+        Cursor c = db.rawQuery("select personid, name, age, gender, livesin, livesinyears,  " +
+                        "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education " +
+                        "from " + PERSON_TABLE_NAME, null);
+
+        List<Person> items = new ArrayList<Person>();
+
+        while (c.moveToNext()) {
+            Person p = new Person(
+                    c.getInt(0),
+                    c.getString(1),
+                    c.getInt(2),
+                    c.getString(3),
+                    c.getString(4),
+                    c.getInt(5),
+                    c.getString(6),
+                    c.getString(7),
+                    c.getString(8),
+                    c.getString(9),
+                    c.getString(10)
+                    );
+            items.add(p);
+        }
+
+        return (Person[]) items.toArray(new Person[items.size()]);
+    }
+
+    public Person getPerson(int personId) {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor c = db.rawQuery("select personid, name, age, gender, livesin, livesinyears,  " +
+                "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education from " + PERSON_TABLE_NAME + "" +
+                " where personid = " + personId, null);
+
+        Person p = null;
+        if (c.moveToNext()) {
+            p = new Person(
+                    c.getInt(0),
+                    c.getString(1),
+                    c.getInt(2),
+                    c.getString(3),
+                    c.getString(4),
+                    c.getInt(5),
+                    c.getString(6),
+                    c.getString(7),
+                    c.getString(8),
+                    c.getString(9),
+                    c.getString(10));
+        }
+
+        return p;
     }
 
 }

@@ -9,29 +9,27 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.lachlan.myfirstapp.code.DatabaseHelper;
+import com.example.lachlan.myfirstapp.code.Person;
 
 
 public class HomeActivity extends ActionBarActivity {
 
+    public final static String INTENT_PERSONID = "com.example.lachlan.myfirstapp.personid";
+
+    Spinner selectPersonSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        Spinner spinner = (Spinner) findViewById(R.id.person_spinner);
+        selectPersonSpinner = (Spinner) findViewById(R.id.person_spinner);
 
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+        Person[] people = db.getPeople();
 
-        String[] people = db.getPeople();
-
-        // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, people);
-
-        // Apply the adapter to the spinner
-        spinner.setAdapter(adapter);
-
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, people);
+        selectPersonSpinner.setAdapter(adapter);
     }
 
 
@@ -68,4 +66,12 @@ public class HomeActivity extends ActionBarActivity {
         startActivity(intent);
     }
 
+    public void editPersonButton(android.view.View view) {
+        Person p = (Person)selectPersonSpinner.getSelectedItem();
+        if (p != null) {
+            Intent intent = new Intent(this, PersonActivity.class);
+            intent.putExtra(INTENT_PERSONID, p.personid);
+            startActivity(intent);
+        }
+    }
 }
