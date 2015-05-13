@@ -7,10 +7,10 @@ public class Person {
 
     public int personid = 0;
     public String name = "";
-    public int age = 0;
+    public Integer age;
     public String gender = "";
     public String livesin = "";
-    public int livesinyears = 0;
+    public Integer livesinyears;
     public String firstlanguage = "";
     public String secondlanguage = "";
     public String thirdlanguage = "";
@@ -21,8 +21,8 @@ public class Person {
 
     }
 
-    public Person( int _id, String _name, int _age, String _gender, String _livesin,
-                   int _livesinyears, String _firstlanguage, String _secondlanguage,
+    public Person( int _id, String _name, Integer _age, String _gender, String _livesin,
+                   Integer _livesinyears, String _firstlanguage, String _secondlanguage,
                    String _thirdlanguage, String _otherlanguages, String _education)
     {
         personid = _id;

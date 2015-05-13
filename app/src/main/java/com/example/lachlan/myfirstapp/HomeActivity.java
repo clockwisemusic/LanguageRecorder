@@ -1,5 +1,6 @@
 package com.example.lachlan.myfirstapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -7,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.lachlan.myfirstapp.code.DatabaseHelper;
 import com.example.lachlan.myfirstapp.code.Person;
@@ -28,8 +30,28 @@ public class HomeActivity extends ActionBarActivity {
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         Person[] people = db.getPeople();
 
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, people);
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, people);
         selectPersonSpinner.setAdapter(adapter);
+
+        Intent intent = getIntent();
+        String message = intent.getStringExtra(PersonActivity.INTENT_PERSONSAVED);
+
+        if (message != null) {
+            Context context = getApplicationContext();
+            Toast toast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            toast.show();
+
+            int personid = intent.getIntExtra(PersonActivity.INTENT_PERSONSAVEDID, 0);
+
+            //TODO select the right person in the selectPersonSpinner based on personid
+
+            for (int i=0;i<=people.length;i++) {
+                if (people[i].personid == personid) {
+                    selectPersonSpinner.setSelection(i);
+                    break;
+                }
+            }
+        }
     }
 
 
@@ -57,8 +79,16 @@ public class HomeActivity extends ActionBarActivity {
     }
 
     public void startButton(android.view.View view) {
-        Intent intent = new Intent(this, CaptureActivity.class);
-        startActivity(intent);
+        Person p = (Person)selectPersonSpinner.getSelectedItem();
+        if (p != null) {
+            Intent intent = new Intent(this, CaptureActivity.class);
+            intent.putExtra(INTENT_PERSONID, p.personid);
+            startActivity(intent);
+        } else {
+            Context context = getApplicationContext();
+            Toast toast = Toast.makeText(context, "Please select a person", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
     public void newPersonButton(android.view.View view) {

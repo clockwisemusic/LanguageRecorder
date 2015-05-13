@@ -9,8 +9,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
+    android:paddingTop="10dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp">
+
+    <TextView android:id="@+id/capturetitle"
+        android:text="Capturing for: "
+        android:paddingBottom="0px"
+        android:layout_marginBottom="0px"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <ImageView
         android:layout_width="wrap_content"

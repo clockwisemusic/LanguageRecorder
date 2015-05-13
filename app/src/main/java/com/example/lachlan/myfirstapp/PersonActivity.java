@@ -1,5 +1,6 @@
 package com.example.lachlan.myfirstapp;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -10,11 +11,15 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.lachlan.myfirstapp.code.DatabaseHelper;
 import com.example.lachlan.myfirstapp.code.Person;
 
 public class PersonActivity extends ActionBarActivity {
+
+    public final static String INTENT_PERSONSAVED = "com.example.lachlan.myfirstapp.personsaved";
+    public final static String INTENT_PERSONSAVEDID = "com.example.lachlan.myfirstapp.personsavedid";
 
     private EditText nameEditText;
     private EditText ageEditText;
@@ -61,10 +66,10 @@ public class PersonActivity extends ActionBarActivity {
         String[] languages = getResources().getStringArray(R.array.languages_array);
 
         ArrayAdapter<String> genderSpinnerAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, genders);
+                android.R.layout.simple_spinner_dropdown_item, genders);
 
         ArrayAdapter<String> educatedToSpinnerAdapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_spinner_item, educatedTo);
+                android.R.layout.simple_spinner_dropdown_item, educatedTo);
 
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, languages);
@@ -89,8 +94,10 @@ public class PersonActivity extends ActionBarActivity {
             Person person = db.getPerson(personId);
             if (person != null) {
                 nameEditText.setText(person.name);
-                ageEditText.setText(String.valueOf(person.age));
 
+                if (person.age != null) {
+                    ageEditText.setText(String.valueOf(person.age));
+                }
                 if (person.gender.equalsIgnoreCase("Male")) {
                     genderSpinner.setSelection(1);
                 }
@@ -98,7 +105,10 @@ public class PersonActivity extends ActionBarActivity {
                     genderSpinner.setSelection(2);
                 }
                 locationEditText.setText(person.livesin);
-                locationYearsEditText.setText(String.valueOf(person.livesinyears));
+
+                if (person.livesinyears != null) {
+                    locationYearsEditText.setText(String.valueOf(person.livesinyears));
+                }
                 firstLanguageAutocomplete.setText(person.firstlanguage);
                 secondLanguageAutocomplete.setText(person.secondlanguage);
                 thirdLanguageAutocomplete.setText(person.thirdlanguage);
@@ -143,31 +153,56 @@ public class PersonActivity extends ActionBarActivity {
 
     public void okButton(android.view.View view) {
 
+        String nameText = nameEditText.getText().toString();
+
+        if (nameText.trim().length() == 0) {
+            Context context = getApplicationContext();
+            Toast toast = Toast.makeText(context, "Please enter a name", Toast.LENGTH_SHORT);
+            toast.show();
+            return;
+        }
+
+        savePerson();
+    }
+
+    private void savePerson() {
+        String ageText = ageEditText.getText().toString();
+        String livesInYears = locationYearsEditText.getText().toString();
+
         Person person = new Person();
 
         person.personid = personId;
         person.name = nameEditText.getText().toString();
-        person.age = Integer.parseInt( ageEditText.getText().toString());
+
+        if (ageText.trim().length() > 0) {
+            person.age = Integer.parseInt(ageText);
+        }
+        if (livesInYears.trim().length() > 0) {
+            person.livesinyears = Integer.parseInt(livesInYears);
+        }
         person.gender = genderSpinner.getSelectedItem().toString();
         person.livesin = locationEditText.getText().toString();
-        person.livesinyears = Integer.parseInt(locationYearsEditText.getText().toString());
         person.firstlanguage = firstLanguageAutocomplete.getText().toString();
         person.secondlanguage = secondLanguageAutocomplete.getText().toString();
         person.thirdlanguage = thirdLanguageAutocomplete.getText().toString();
         person.otherlanguages = otherLanguagesAutocomplete.getText().toString();
         person.education = educatedToSpinner.getSelectedItem().toString();
 
-        if ( person.name.trim().length() > 0) {
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+        String message;
 
-            DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-
-            if (editMode) {
-                db.updatePerson(person);
-            } else {
-                db.insertPerson(person);
-            }
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+        if (editMode) {
+            db.updatePerson(person);
+            message = "Person updated";
+        } else {
+            db.insertPerson(person);
+            message = "Person added";
         }
+
+        Intent intent = new Intent(this, HomeActivity.class);
+        intent.putExtra(INTENT_PERSONSAVED, message);
+        intent.putExtra(INTENT_PERSONSAVEDID, person.personid);
+
+        startActivity(intent);
     }
 }

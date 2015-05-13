@@ -89,6 +89,7 @@
                 android:layout_height="wrap_content" />
 
             <EditText
+                android:nextFocusDown="@+id/locationYearsEditText"
                 android:id="@+id/locationEditText"
                 android:singleLine="true"
                 android:layout_marginBottom="10px"
@@ -111,6 +112,7 @@
 
             <EditText
                 android:id="@+id/locationYearsEditText"
+                android:nextFocusDown="@+id/autocomplete_first_language"
                 android:singleLine="true"
                 android:inputType="number"
                 android:layout_width="match_parent"
@@ -137,6 +139,7 @@
 
             <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/autocomplete_first_language"
+                android:nextFocusDown="@+id/autocomplete_second_language"
                 android:singleLine="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
@@ -155,6 +158,7 @@
 
             <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/autocomplete_second_language"
+                android:nextFocusDown="@+id/autocomplete_third_language"
                 android:singleLine="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
@@ -180,6 +184,7 @@
 
             <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/autocomplete_third_language"
+                android:nextFocusDown="@+id/autocomplete_other_languages"
                 android:singleLine="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />

@@ -1,19 +1,20 @@
 package com.example.lachlan.myfirstapp;
 
 import android.content.Intent;
-import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.media.MediaRecorder;
 import android.media.MediaPlayer;
+import android.widget.TextView;
 
+import com.example.lachlan.myfirstapp.code.DatabaseHelper;
 import com.example.lachlan.myfirstapp.code.DiskSpace;
+import com.example.lachlan.myfirstapp.code.Person;
 
 import java.io.IOException;
 
@@ -22,10 +23,11 @@ public class CaptureActivity extends ActionBarActivity {
     public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
 
     // state variables
-    private int picture = 1;
+    private int itemid = 1;
+    private int personid = 0;
     private boolean recording = false;
     private boolean playing = false;
-    private String[] itemNames = new String[5];
+//    private String[] itemNames = new String[5];
 
     // the media players/recorders
     private MediaRecorder mRecorder = null;
@@ -37,7 +39,9 @@ public class CaptureActivity extends ActionBarActivity {
     private Button playbutton;
     private EditText editText;
     private ImageView imageView;
+    private TextView captureTitleTextView;
 
+    private DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +53,26 @@ public class CaptureActivity extends ActionBarActivity {
         playbutton = (Button)findViewById(R.id.playbutton);
         editText = (EditText)findViewById(R.id.edit_message);
         imageView = (ImageView) findViewById(R.id.myimageview);
+        captureTitleTextView = (TextView) findViewById(R.id.capturetitle);
 
         stopbutton.setEnabled(false);
+
+        dbHelper = new DatabaseHelper(getApplicationContext());
+
+        populateTitle();
 
         showPicture();
 
         getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
+    private void populateTitle() {
+        Intent intent = getIntent();
+        personid = intent.getIntExtra(HomeActivity.INTENT_PERSONID, 0);
+        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+        Person p = db.getPerson(personid);
+        captureTitleTextView.setText("Capturing for: " + p.name);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -95,16 +111,8 @@ public class CaptureActivity extends ActionBarActivity {
             recording = true;
             startRecording();
         }
-
-        /*Intent intent = new Intent(this, DisplayMessageActivity.class);
-        EditText editText = (EditText)findViewById(R.id.edit_message);
-        String message = editText.getText().toString();
-        intent.putExtra(EXTRA_MESSAGE, message);
-        startActivity(intent);*/
-
-        //ImageView imageView = (ImageView) findViewById(R.id.myimageview);
-        //imageView.setImageResource(R.drawable.me);
     }
+
     public void stopButton(android.view.View view) {
         handleStopButton();
     }
@@ -126,20 +134,26 @@ public class CaptureActivity extends ActionBarActivity {
         }
     }
 
+    private void saveWord() {
+        String word = editText.getText().toString();
+        dbHelper.saveWord(personid, itemid, word);
+    }
+
     public void backButton(android.view.View view){
 
-        itemNames[picture] = editText.getText().toString();
+        saveWord();
 
-        picture--;
-        if (picture < 1) picture = 4;
+        itemid--;
+        if (itemid < 1) itemid = 4;
         showPicture();
     }
+
     public void nextButton(android.view.View view){
 
-        itemNames[picture] = editText.getText().toString();
+        saveWord();
 
-        picture++;
-        if (picture > 4) picture = 1;
+        itemid++;
+        if (itemid > 4) itemid = 1;
         showPicture();
     }
 
@@ -147,22 +161,22 @@ public class CaptureActivity extends ActionBarActivity {
 
         int pictureToUse = 0;
 
-        if (picture == 1) {
+        if (itemid == 1) {
             pictureToUse = R.drawable.church;
         }
-        if (picture == 2) {
+        if (itemid == 2) {
             pictureToUse = R.drawable.goat;
         }
-        if (picture == 3) {
+        if (itemid == 3) {
             pictureToUse = R.drawable.rooster;
         }
-        if (picture == 4) {
+        if (itemid == 4) {
             pictureToUse = R.drawable.spider;
         }
 
         imageView.setImageResource(pictureToUse);
 
-        String itemName = itemNames[picture];
+        String itemName = dbHelper.getWord(personid, itemid);
         editText.setText(itemName);
 
     }
@@ -178,7 +192,7 @@ public class CaptureActivity extends ActionBarActivity {
                                                             handleStopButton();
                                                         }
                                                     });
-            String filename = DiskSpace.getFilename(picture);
+            String filename = DiskSpace.getFilename(itemid);
             mPlayer.setDataSource(filename);
             mPlayer.prepare();
             mPlayer.start();
@@ -199,7 +213,7 @@ public class CaptureActivity extends ActionBarActivity {
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 
-        String filename = DiskSpace.getFilename(picture);
+        String filename = DiskSpace.getFilename(itemid);
 
         mRecorder.setOutputFile(filename);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
