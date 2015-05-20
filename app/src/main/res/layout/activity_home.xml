@@ -44,18 +44,23 @@
         </LinearLayout>
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
         <Button
             android:layout_marginTop="50px"
             android:layout_marginBottom="50px"
             android:onClick="newPersonButton"
             android:text="Add new person"
             android:id="@+id/add_person"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <Button
             android:layout_marginBottom="50px"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Start Capturing"
             android:id="@+id/stopbutton"
@@ -63,11 +68,12 @@
 
             />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Server Upload"
+            android:text="Data Upload"
             android:id="@+id/uploadbutton"
             android:onClick="uploadButton"
             />
 
+    </LinearLayout>
 </LinearLayout>

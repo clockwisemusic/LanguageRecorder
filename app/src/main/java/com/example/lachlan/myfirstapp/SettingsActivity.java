@@ -44,7 +44,6 @@ import java.util.List;
 public class SettingsActivity extends ActionBarActivity {
 
     final static public String PREFS_NAME = "MyPrefsFile";
-    private String baseUrl = "http://10.55.94.224";
 
 
     // In the class declaration section:
@@ -55,9 +54,7 @@ public class SettingsActivity extends ActionBarActivity {
     private TextView editTextTotalDiskSpace;
     private TextView editTextTotalDiskSpaceFree;
     private TextView dropboxAccessToken;
-    private TextView uploadProgressTextView;
     private Button loginButton;
-    private Button uploadFileButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +65,6 @@ public class SettingsActivity extends ActionBarActivity {
         editTextTotalDiskSpaceFree = (TextView)findViewById(R.id.total_disk_space_free_label);
         dropboxAccessToken = (TextView)findViewById(R.id.dropbox_access_token);
         loginButton = (Button)findViewById(R.id.connect_dropbox_button);
-        uploadFileButton = (Button)findViewById(R.id.upload_file_button);
-        uploadProgressTextView = (TextView)findViewById(R.id.upload_progres);
 
         String diskSpace = DiskSpace.totalDiskSpace();
         String freeSpace = DiskSpace.totalAvailableDiskSpace();
@@ -84,12 +79,10 @@ public class SettingsActivity extends ActionBarActivity {
         AndroidAuthSession session = new AndroidAuthSession(pair);
         mDBApi = new DropboxAPI<AndroidAuthSession>(session);
 
-        progressText = "";
     }
 
     public void loggedIn(boolean isLogged) {
         isLoggedIn = isLogged;
-        uploadFileButton.setEnabled(isLogged);
         loginButton.setText(isLogged ? "Log out of dropbox" : "Log in to dropbox");
     }
 
@@ -165,154 +158,11 @@ public class SettingsActivity extends ActionBarActivity {
 
 
 
-    public void uploadToServer(android.view.View view) {
-
-        new Thread(new Runnable() {
-            public void run() {
-
-                addMessage("starting to upload...");
-                addMessage("uploading data");
-                uploadData();
-
-                //for (int i=0;i<CaptureActivity.totalItems;i++) {
-                String audioFilename = DiskSpace.getFilename(1);
-                doFileUpload(audioFilename);
-
-        }
-        }).start();
-    }
-
-    private String progressText;
-
-    private void addMessage(String message) {
-        Date now = new Date();
-        String thetime = DateFormat.getTimeInstance().format(now);
-        progressText += thetime + " " + message + "\n";
-        uploadProgressTextView.post(new Runnable() {
-            public void run() {
-                uploadProgressTextView.setText(progressText);
-            }
-        });
-
-    }
-
-    private void uploadData() {
-        HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(baseUrl + "/uploaddata.php");
-
-        try {
-
-            DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
-            String json = dbHelper.getAllData();
-
-            // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("json", json));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
-            HttpResponse response = httpclient.execute(httppost);
-
-        } catch (ClientProtocolException e) {
-            Log.i("languageapp", e.toString());
-            // TODO Auto-generated catch block
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            Log.i("languageapp", e.toString());
-        }
-
-    }
-
-
-
-
-    private void doFileUpload(String audioFilename){
-        HttpURLConnection conn = null;
-        DataOutputStream dos = null;
-        DataInputStream inStream = null;
-        String lineEnd = "\r\n";
-        String twoHyphens = "--";
-        String boundary =  "*****";
-        int bytesRead, bytesAvailable, bufferSize;
-        byte[] buffer;
-        int maxBufferSize = 1*1024*1024;
-        String responseFromServer = "";
-        String urlString = baseUrl + "/uploadaudio.php";
-
-        try
-        {
-
-            //------------------ CLIENT REQUEST
-            FileInputStream fileInputStream = new FileInputStream(new File(audioFilename) );
-            URL url = new URL(urlString);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setDoInput(true);
-            conn.setDoOutput(true);
-            conn.setUseCaches(false);
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Connection", "Keep-Alive");
-            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
-            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
-            conn.setRequestProperty("uploaded_file", "test.3gp");
-            dos = new DataOutputStream( conn.getOutputStream() );
-            dos.writeBytes(twoHyphens + boundary + lineEnd);
-            dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\"test.3gp\"" + lineEnd);
-            dos.writeBytes(lineEnd);
-            // create a buffer of maximum size
-            bytesAvailable = fileInputStream.available();
-            bufferSize = Math.min(bytesAvailable, maxBufferSize);
-            buffer = new byte[bufferSize];
-            // read file and write it into form...
-            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            while (bytesRead > 0)
-            {
-                dos.write(buffer, 0, bufferSize);
-                bytesAvailable = fileInputStream.available();
-                bufferSize = Math.min(bytesAvailable, maxBufferSize);
-                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-            }
-            // send multipart form data necesssary after file data...
-            dos.writeBytes(lineEnd);
-            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
-            // close streams
-            Log.i("LanguageApp", "File is written");
-            fileInputStream.close();
-            dos.flush();
-            dos.close();
-        }
-        catch (MalformedURLException ex)
-        {
-            Log.e("LanguageApp", "error: " + ex.getMessage(), ex);
-        }
-        catch (IOException ioe)
-        {
-            Log.e("LanguageApp", "error: " + ioe.getMessage(), ioe);
-        }
-
-
-        //------------------ read the SERVER RESPONSE
-        try {
-            inStream = new DataInputStream ( conn.getInputStream() );
-            String str;
-
-            while (( str = inStream.readLine()) != null)
-            {
-                Log.i("LanguageApp","Server Response: "+str);
-            }
-            inStream.close();
-
-        }
-        catch (IOException ioex){
-            Log.e("LanguageApp", "error: " + ioex.getMessage(), ioex);
-        }
-    }
-
-
     public void uploadFile(android.view.View view)
     {
         dropboxAccessToken.setText("Uploading...");
 
-        uploadFileButton.setEnabled(false);
+        //uploadFileButton.setEnabled(false);
 
         new Thread(new Runnable() {
             public void run() {
@@ -337,7 +187,7 @@ public class SettingsActivity extends ActionBarActivity {
                     dropboxAccessToken.post(new Runnable() {
                         public void run() {
                             dropboxAccessToken.setText("File uploaded!");
-                            uploadFileButton.setEnabled(true);
+                            //uploadFileButton.setEnabled(true);
                         }
                     });
                 }
@@ -347,7 +197,7 @@ public class SettingsActivity extends ActionBarActivity {
                     dropboxAccessToken.post(new Runnable() {
                         public void run() {
                             dropboxAccessToken.setText("An error occured...");
-                            uploadFileButton.setEnabled(true);
+                            //uploadFileButton.setEnabled(true);
                         }
                     });
                 }

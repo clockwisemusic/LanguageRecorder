@@ -24,4 +24,5 @@
         <item>korean</item>
     </string-array>
     <string name="title_activity_person">PersonActivity</string>
+    <string name="title_activity_upload">Data Upload</string>
 </resources>
