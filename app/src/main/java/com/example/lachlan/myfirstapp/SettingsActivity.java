@@ -44,7 +44,7 @@ import java.util.List;
 public class SettingsActivity extends ActionBarActivity {
 
     final static public String PREFS_NAME = "MyPrefsFile";
-    private String baseUrl = "http://10.0.0.31";
+    private String baseUrl = "http://10.55.94.224";
 
 
     // In the class declaration section:
@@ -174,10 +174,11 @@ public class SettingsActivity extends ActionBarActivity {
                 addMessage("uploading data");
                 uploadData();
 
+                //for (int i=0;i<CaptureActivity.totalItems;i++) {
                 String audioFilename = DiskSpace.getFilename(1);
-
                 doFileUpload(audioFilename);
-            }
+
+        }
         }).start();
     }
 
@@ -186,7 +187,7 @@ public class SettingsActivity extends ActionBarActivity {
     private void addMessage(String message) {
         Date now = new Date();
         String thetime = DateFormat.getTimeInstance().format(now);
-        progressText = thetime + " " + message + "\n" + progressText;
+        progressText += thetime + " " + message + "\n";
         uploadProgressTextView.post(new Runnable() {
             public void run() {
                 uploadProgressTextView.setText(progressText);

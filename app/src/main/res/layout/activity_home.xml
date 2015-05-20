@@ -11,21 +11,19 @@
     android:gravity="center_horizontal"
     tools:context="com.example.lachlan.myfirstapp.HomeActivity">
 
-    <TextView android:text="Select person"
-        android:textSize="16pt"
-        android:paddingTop="20px"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
     <LinearLayout
         android:gravity="left"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <TextView android:text="Person selection"
+            android:layout_marginBottom="50px"
+            android:textSize="10pt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
         <LinearLayout
-            android:paddingTop="40px"
-            android:paddingBottom="0px"
             android:gravity="left"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,26 +41,33 @@
                 android:layout_height="wrap_content">
 
             </Button>
-
         </LinearLayout>
-
     </LinearLayout>
 
-    <Button
-        android:onClick="newPersonButton"
-        android:text="Add new person"
-        android:id="@+id/add_person"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        <Button
+            android:layout_marginTop="50px"
+            android:layout_marginBottom="50px"
+            android:onClick="newPersonButton"
+            android:text="Add new person"
+            android:id="@+id/add_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-    <Button
-        android:paddingTop="50px"
-        android:paddingBottom="50px"
-        android:layout_marginTop="100px"
-        android:layout_width="128dp"
-        android:layout_height="wrap_content"
-        android:text="Start Capturing"
-        android:id="@+id/stopbutton"
-        android:onClick="startButton"
-        />
+        <Button
+            android:layout_marginBottom="50px"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Capturing"
+            android:id="@+id/stopbutton"
+            android:onClick="startButton"
+
+            />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Server Upload"
+            android:id="@+id/uploadbutton"
+            android:onClick="uploadButton"
+            />
+
 </LinearLayout>

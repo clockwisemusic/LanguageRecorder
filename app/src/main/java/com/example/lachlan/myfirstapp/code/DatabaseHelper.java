@@ -82,6 +82,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long personid = db.insert(PERSON_TABLE_NAME, null, values);
 
         person.personid = (int)personid;
+
+        db.close();
     }
 
     public void updatePerson(Person person) {
@@ -92,6 +94,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.update(PERSON_TABLE_NAME, values, "personid = " + String.valueOf(person.personid), null);
 
+        db.close();
     }
 
     public void saveWord(int personid, int pictureid, String word) {
@@ -125,6 +128,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.insert(PERSONCAPTURE_TABLE_NAME, null, values);
             }
         }
+
+        db.close();
     }
 
     public String getWord(int personid, int pictureid) {
@@ -137,10 +142,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         Cursor c = db.rawQuery(sql, null);
 
+        String word = null;
+
         if (c.moveToNext()) {
-            return c.getString(0);
+            word = c.getString(0);
         }
-        return null;
+
+        db.close();
+
+        return word;
     }
 
     public PersonWord[] getAllWords() {
@@ -156,6 +166,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             );
             items.add(pw);
         }
+        db.close();
         return (PersonWord[]) items.toArray(new PersonWord[items.size()]);
     }
 
@@ -182,6 +193,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 json = json.concat(",");
             }
         }
+
+
         json = json.concat("]");
         return json;
     }
@@ -226,6 +239,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             items.add(p);
         }
 
+        db.close();
+
         return (Person[]) items.toArray(new Person[items.size()]);
     }
 
@@ -263,6 +278,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     c.getString(9),
                     c.getString(10));
         }
+
+        db.close();
 
         return p;
     }

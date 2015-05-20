@@ -25,6 +25,9 @@ public class CaptureActivity extends ActionBarActivity {
     // state variables
     private int itemid = 1;
     private int personid = 0;
+
+    public static int totalItems = 4;
+
     private boolean recording = false;
     private boolean playing = false;
 //    private String[] itemNames = new String[5];
@@ -144,7 +147,7 @@ public class CaptureActivity extends ActionBarActivity {
         saveWord();
 
         itemid--;
-        if (itemid < 1) itemid = 4;
+        if (itemid < 1) itemid = totalItems;
         showPicture();
     }
 
@@ -153,7 +156,7 @@ public class CaptureActivity extends ActionBarActivity {
         saveWord();
 
         itemid++;
-        if (itemid > 4) itemid = 1;
+        if (itemid > totalItems) itemid = 1;
         showPicture();
     }
 

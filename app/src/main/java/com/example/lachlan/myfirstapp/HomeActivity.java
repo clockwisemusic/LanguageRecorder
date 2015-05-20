@@ -104,4 +104,10 @@ public class HomeActivity extends ActionBarActivity {
             startActivity(intent);
         }
     }
+
+    public void uploadButton(android.view.View view) {
+        Intent intent = new Intent(this, SettingsActivity.class);
+        startActivity(intent);
+
+    }
 }
