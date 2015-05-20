@@ -143,6 +143,49 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return null;
     }
 
+    public PersonWord[] getAllWords() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select personid, itemid, word from " + PERSONCAPTURE_TABLE_NAME + " where word <> ''";
+        Cursor c = db.rawQuery(sql, null);
+        List<PersonWord> items = new ArrayList<PersonWord>();
+        while (c.moveToNext()) {
+            PersonWord pw = new PersonWord(
+                    c.getInt(0),
+                    c.getInt(1),
+                    c.getString(2)
+            );
+            items.add(pw);
+        }
+        return (PersonWord[]) items.toArray(new PersonWord[items.size()]);
+    }
+
+    private PersonWord[] wordsForPerson(int personid, PersonWord[] allWords) {
+        List<PersonWord> items = new ArrayList<PersonWord>();
+        for (int i=0;i<allWords.length;i++) {
+            if (allWords[i].personid == personid) {
+                items.add(allWords[i]);
+            }
+        }
+        return (PersonWord[]) items.toArray(new PersonWord[items.size()]);
+    }
+
+    public String getAllData() {
+        Person[] people = getPeople();
+        PersonWord[] allWords = getAllWords();
+
+        String json = "[";
+        for (int i=0;i<people.length;i++) {
+            Person p = people[i];
+            PersonWord[] words = wordsForPerson(p.personid, allWords);
+            json = json.concat(p.getAsJson(words));
+            if (i < people.length - 1) {
+                json = json.concat(",");
+            }
+        }
+        json = json.concat("]");
+        return json;
+    }
+
     public Person[] getPeople() {
 
         SQLiteDatabase db = this.getReadableDatabase();

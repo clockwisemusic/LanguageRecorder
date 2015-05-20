@@ -2,6 +2,9 @@ package com.example.lachlan.myfirstapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.lachlan.myfirstapp.code.DatabaseHelper;
@@ -31,26 +35,31 @@ public class PersonActivity extends ActionBarActivity {
     private AutoCompleteTextView otherLanguagesAutocomplete;
     private Spinner genderSpinner;
     private Spinner educatedToSpinner;
+    private TextView mylocationTextView;
 
     private int personId;
     private Boolean editMode = false;
 
+    LocationManager locationManager;
+    LocationListener locationListener;
+    Location lastKnownLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person);
 
-        nameEditText = (EditText)findViewById(R.id.nameEditText);
-        ageEditText = (EditText)findViewById(R.id.ageEditText);
-        locationEditText = (EditText)findViewById(R.id.locationEditText);
-        locationYearsEditText = (EditText)findViewById(R.id.locationYearsEditText);
-        firstLanguageAutocomplete = (AutoCompleteTextView)findViewById(R.id.autocomplete_first_language);
-        secondLanguageAutocomplete = (AutoCompleteTextView)findViewById(R.id.autocomplete_second_language);
-        thirdLanguageAutocomplete = (AutoCompleteTextView)findViewById(R.id.autocomplete_third_language);
-        otherLanguagesAutocomplete = (AutoCompleteTextView)findViewById(R.id.autocomplete_other_languages);
-        genderSpinner = (Spinner)findViewById(R.id.gender_spinner);
-        educatedToSpinner = (Spinner)findViewById(R.id.educated_to_spinner);
+        nameEditText = (EditText) findViewById(R.id.nameEditText);
+        ageEditText = (EditText) findViewById(R.id.ageEditText);
+        locationEditText = (EditText) findViewById(R.id.locationEditText);
+        locationYearsEditText = (EditText) findViewById(R.id.locationYearsEditText);
+        firstLanguageAutocomplete = (AutoCompleteTextView) findViewById(R.id.autocomplete_first_language);
+        secondLanguageAutocomplete = (AutoCompleteTextView) findViewById(R.id.autocomplete_second_language);
+        thirdLanguageAutocomplete = (AutoCompleteTextView) findViewById(R.id.autocomplete_third_language);
+        otherLanguagesAutocomplete = (AutoCompleteTextView) findViewById(R.id.autocomplete_other_languages);
+        genderSpinner = (Spinner) findViewById(R.id.gender_spinner);
+        educatedToSpinner = (Spinner) findViewById(R.id.educated_to_spinner);
+        mylocationTextView = (TextView) findViewById(R.id.mylocation);
 
         populateReferenceData();
 
@@ -61,8 +70,8 @@ public class PersonActivity extends ActionBarActivity {
 
 
     private void populateReferenceData() {
-        String[] genders = { "", "Male", "Female" };
-        String[] educatedTo = { "", "Primary", "Secondary", "University" };
+        String[] genders = {"", "Male", "Female" };
+        String[] educatedTo = {"", "Primary", "Secondary", "University" };
         String[] languages = getResources().getStringArray(R.array.languages_array);
 
         ArrayAdapter<String> genderSpinnerAdapter = new ArrayAdapter<String>(this,
@@ -204,5 +213,52 @@ public class PersonActivity extends ActionBarActivity {
         intent.putExtra(INTENT_PERSONSAVEDID, person.personid);
 
         startActivity(intent);
+    }
+
+    private void makeUseOfNewLocation(Location location) {
+        if (location != null) {
+            Log.i("LanguageApp", location.toString());
+            mylocationTextView.setText("My location: Lat "
+                    + location.getLatitude() + ", Long " + location.getLongitude());
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        locationManager.removeUpdates(locationListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+
+
+        // Define a listener that responds to location updates
+        locationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                // Called when a new location is found by the network location provider.
+                makeUseOfNewLocation(location);
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            public void onProviderEnabled(String provider) {}
+
+            public void onProviderDisabled(String provider) {}
+        };
+
+        // Register the listener with the Location Manager to receive location updates
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+
+        String locationProvider = LocationManager.NETWORK_PROVIDER;
+        lastKnownLocation = locationManager.getLastKnownLocation(locationProvider);
+
+        if (lastKnownLocation != null) {
+            Log.i("LanguageApp", lastKnownLocation.toString());
+        }
     }
 }

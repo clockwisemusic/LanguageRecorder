@@ -21,9 +21,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
+    <LinearLayout android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <Button android:id="@+id/connect_dropbox_button"
             android:text="Connect to dropbox"
             android:layout_width="wrap_content"
@@ -35,12 +36,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:onClick="uploadFile"/>
-        </LinearLayout>
 
+    </LinearLayout>
 
     <TextView android:id="@+id/dropbox_access_token"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <Button android:text="Upload to Server"
+        android:onClick="uploadToServer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView android:id="@+id/upload_progres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
 </LinearLayout>

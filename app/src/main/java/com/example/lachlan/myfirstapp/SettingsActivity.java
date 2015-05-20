@@ -13,16 +13,39 @@ import android.widget.TextView;
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
 import com.dropbox.client2.session.AppKeyPair;
+import com.example.lachlan.myfirstapp.code.DatabaseHelper;
 import com.example.lachlan.myfirstapp.code.DiskSpace;
 import com.example.lachlan.myfirstapp.code.DropBoxSettings;
+import com.example.lachlan.myfirstapp.code.Person;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public class SettingsActivity extends ActionBarActivity {
 
     final static public String PREFS_NAME = "MyPrefsFile";
+    private String baseUrl = "http://10.0.0.31";
+
 
     // In the class declaration section:
     private DropboxAPI<AndroidAuthSession> mDBApi;
@@ -32,6 +55,7 @@ public class SettingsActivity extends ActionBarActivity {
     private TextView editTextTotalDiskSpace;
     private TextView editTextTotalDiskSpaceFree;
     private TextView dropboxAccessToken;
+    private TextView uploadProgressTextView;
     private Button loginButton;
     private Button uploadFileButton;
 
@@ -45,6 +69,7 @@ public class SettingsActivity extends ActionBarActivity {
         dropboxAccessToken = (TextView)findViewById(R.id.dropbox_access_token);
         loginButton = (Button)findViewById(R.id.connect_dropbox_button);
         uploadFileButton = (Button)findViewById(R.id.upload_file_button);
+        uploadProgressTextView = (TextView)findViewById(R.id.upload_progres);
 
         String diskSpace = DiskSpace.totalDiskSpace();
         String freeSpace = DiskSpace.totalAvailableDiskSpace();
@@ -58,6 +83,8 @@ public class SettingsActivity extends ActionBarActivity {
         AppKeyPair pair = new AppKeyPair(DropBoxSettings.APP_KEY, DropBoxSettings.APP_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(pair);
         mDBApi = new DropboxAPI<AndroidAuthSession>(session);
+
+        progressText = "";
     }
 
     public void loggedIn(boolean isLogged) {
@@ -133,6 +160,149 @@ public class SettingsActivity extends ActionBarActivity {
                     Log.e("myfirstapp", e.toString());
                 }
             }
+        }
+    }
+
+
+
+    public void uploadToServer(android.view.View view) {
+
+        new Thread(new Runnable() {
+            public void run() {
+
+                addMessage("starting to upload...");
+                addMessage("uploading data");
+                uploadData();
+
+                String audioFilename = DiskSpace.getFilename(1);
+
+                doFileUpload(audioFilename);
+            }
+        }).start();
+    }
+
+    private String progressText;
+
+    private void addMessage(String message) {
+        Date now = new Date();
+        String thetime = DateFormat.getTimeInstance().format(now);
+        progressText = thetime + " " + message + "\n" + progressText;
+        uploadProgressTextView.post(new Runnable() {
+            public void run() {
+                uploadProgressTextView.setText(progressText);
+            }
+        });
+
+    }
+
+    private void uploadData() {
+        HttpClient httpclient = new DefaultHttpClient();
+        HttpPost httppost = new HttpPost(baseUrl + "/uploaddata.php");
+
+        try {
+
+            DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
+            String json = dbHelper.getAllData();
+
+            // Add your data
+            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+            nameValuePairs.add(new BasicNameValuePair("json", json));
+            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+
+            // Execute HTTP Post Request
+            HttpResponse response = httpclient.execute(httppost);
+
+        } catch (ClientProtocolException e) {
+            Log.i("languageapp", e.toString());
+            // TODO Auto-generated catch block
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            Log.i("languageapp", e.toString());
+        }
+
+    }
+
+
+
+
+    private void doFileUpload(String audioFilename){
+        HttpURLConnection conn = null;
+        DataOutputStream dos = null;
+        DataInputStream inStream = null;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary =  "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1*1024*1024;
+        String responseFromServer = "";
+        String urlString = baseUrl + "/uploadaudio.php";
+
+        try
+        {
+
+            //------------------ CLIENT REQUEST
+            FileInputStream fileInputStream = new FileInputStream(new File(audioFilename) );
+            URL url = new URL(urlString);
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+            conn.setUseCaches(false);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary="+boundary);
+            conn.setRequestProperty("uploaded_file", "test.3gp");
+            dos = new DataOutputStream( conn.getOutputStream() );
+            dos.writeBytes(twoHyphens + boundary + lineEnd);
+            dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\"test.3gp\"" + lineEnd);
+            dos.writeBytes(lineEnd);
+            // create a buffer of maximum size
+            bytesAvailable = fileInputStream.available();
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            buffer = new byte[bufferSize];
+            // read file and write it into form...
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            while (bytesRead > 0)
+            {
+                dos.write(buffer, 0, bufferSize);
+                bytesAvailable = fileInputStream.available();
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+            }
+            // send multipart form data necesssary after file data...
+            dos.writeBytes(lineEnd);
+            dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+            // close streams
+            Log.i("LanguageApp", "File is written");
+            fileInputStream.close();
+            dos.flush();
+            dos.close();
+        }
+        catch (MalformedURLException ex)
+        {
+            Log.e("LanguageApp", "error: " + ex.getMessage(), ex);
+        }
+        catch (IOException ioe)
+        {
+            Log.e("LanguageApp", "error: " + ioe.getMessage(), ioe);
+        }
+
+
+        //------------------ read the SERVER RESPONSE
+        try {
+            inStream = new DataInputStream ( conn.getInputStream() );
+            String str;
+
+            while (( str = inStream.readLine()) != null)
+            {
+                Log.i("LanguageApp","Server Response: "+str);
+            }
+            inStream.close();
+
+        }
+        catch (IOException ioex){
+            Log.e("LanguageApp", "error: " + ioex.getMessage(), ioex);
         }
     }
 
