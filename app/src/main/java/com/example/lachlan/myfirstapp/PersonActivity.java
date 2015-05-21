@@ -44,6 +44,12 @@ public class PersonActivity extends ActionBarActivity {
     LocationListener locationListener;
     Location lastKnownLocation;
 
+    String maleText;
+    String femaleText;
+    String primaryText;
+    String secondaryText;
+    String universityText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +67,12 @@ public class PersonActivity extends ActionBarActivity {
         educatedToSpinner = (Spinner) findViewById(R.id.educated_to_spinner);
         mylocationTextView = (TextView) findViewById(R.id.mylocation);
 
+        maleText = getResources().getString(R.string.person_gender_male);
+        femaleText = getResources().getString(R.string.person_gender_female);
+        primaryText = getResources().getString(R.string.person_education_primary);
+        secondaryText = getResources().getString(R.string.person_education_secondary);
+        universityText = getResources().getString(R.string.person_education_university);
+
         populateReferenceData();
 
         populatePersonDetails();
@@ -70,9 +82,12 @@ public class PersonActivity extends ActionBarActivity {
 
 
     private void populateReferenceData() {
-        String[] genders = {"", "Male", "Female" };
-        String[] educatedTo = {"", "Primary", "Secondary", "University" };
-        String[] languages = getResources().getStringArray(R.array.languages_array);
+
+
+        String[] genders = {"", maleText, femaleText};
+        String[] educatedTo = {"", primaryText, secondaryText, universityText};
+
+        String[] languages = getResources().getStringArray(R.array.person_languages_array);
 
         ArrayAdapter<String> genderSpinnerAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, genders);
@@ -107,10 +122,10 @@ public class PersonActivity extends ActionBarActivity {
                 if (person.age != null) {
                     ageEditText.setText(String.valueOf(person.age));
                 }
-                if (person.gender.equalsIgnoreCase("Male")) {
+                if (person.gender.equalsIgnoreCase(maleText)) {
                     genderSpinner.setSelection(1);
                 }
-                if (person.gender.equalsIgnoreCase("Female")) {
+                if (person.gender.equalsIgnoreCase(femaleText)) {
                     genderSpinner.setSelection(2);
                 }
                 locationEditText.setText(person.livesin);
@@ -122,17 +137,19 @@ public class PersonActivity extends ActionBarActivity {
                 secondLanguageAutocomplete.setText(person.secondlanguage);
                 thirdLanguageAutocomplete.setText(person.thirdlanguage);
                 otherLanguagesAutocomplete.setText(person.otherlanguages);
-                if (person.education.equalsIgnoreCase("Primary")) {
+                if (person.education.equalsIgnoreCase(primaryText)) {
                     educatedToSpinner.setSelection(1);
                 }
-                if (person.education.equalsIgnoreCase("Secondary")) {
+                if (person.education.equalsIgnoreCase(secondaryText)) {
                     educatedToSpinner.setSelection(2);
                 }
-                if (person.education.equalsIgnoreCase("University")) {
+                if (person.education.equalsIgnoreCase(universityText)) {
                     educatedToSpinner.setSelection(3);
                 }
             }
-            getWindow().setTitle("Edit person");
+
+            String windowTitle = getResources().getString(R.string.person_title_edit);
+            getWindow().setTitle(windowTitle);
         }
 
     }
@@ -166,7 +183,10 @@ public class PersonActivity extends ActionBarActivity {
 
         if (nameText.trim().length() == 0) {
             Context context = getApplicationContext();
-            Toast toast = Toast.makeText(context, "Please enter a name", Toast.LENGTH_SHORT);
+
+            String enterName = getResources().getString(R.string.person_enter_name_toast);
+
+            Toast toast = Toast.makeText(context, enterName, Toast.LENGTH_SHORT);
             toast.show();
             return;
         }
@@ -202,10 +222,10 @@ public class PersonActivity extends ActionBarActivity {
 
         if (editMode) {
             db.updatePerson(person);
-            message = "Person updated";
+            message = getResources().getString(R.string.person_updated_toast);
         } else {
             db.insertPerson(person);
-            message = "Person added";
+            message = getResources().getString(R.string.person_added_toast);
         }
 
         Intent intent = new Intent(this, HomeActivity.class);
@@ -218,7 +238,8 @@ public class PersonActivity extends ActionBarActivity {
     private void makeUseOfNewLocation(Location location) {
         if (location != null) {
             Log.i("LanguageApp", location.toString());
-            mylocationTextView.setText("My location: Lat "
+            String myLocation = getResources().getString(R.string.person_mylocation_label);
+            mylocationTextView.setText(myLocation + ": Lat "
                     + location.getLatitude() + ", Long " + location.getLongitude());
         }
     }

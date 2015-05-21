@@ -86,7 +86,9 @@ public class HomeActivity extends ActionBarActivity {
             startActivity(intent);
         } else {
             Context context = getApplicationContext();
-            Toast toast = Toast.makeText(context, "Please select a person", Toast.LENGTH_SHORT);
+            String windowTitle = getResources().getString(R.string.home_select_person_toast);
+
+            Toast toast = Toast.makeText(context, R.string.home_select_person_toast, Toast.LENGTH_SHORT);
             toast.show();
         }
     }

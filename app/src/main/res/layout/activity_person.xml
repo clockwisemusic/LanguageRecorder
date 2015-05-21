@@ -14,7 +14,7 @@
     android:orientation="vertical"
     tools:context="com.example.lachlan.myfirstapp.PersonActivity">
 
-    <TextView android:text="Name"
+    <TextView android:text="@string/person_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-           <TextView android:text="Age"
+           <TextView android:text="@string/person_age_label"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content" />
 
@@ -58,7 +58,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView android:text="Gender"
+            <TextView android:text="@string/person_gender_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -84,7 +84,7 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <TextView android:text="Lives in"
+            <TextView android:text="@string/person_livesin_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -106,7 +106,7 @@
             android:orientation="vertical"
             >
 
-            <TextView android:text="For number of years"
+            <TextView android:text="@string/person_livesinfor_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -133,7 +133,7 @@
             android:layout_weight="1"
             android:orientation="vertical"
             >
-            <TextView android:text="First language"
+            <TextView android:text="@string/person_firstlanguage_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -152,7 +152,7 @@
             android:layout_weight="1"
             android:orientation="vertical"
             >
-            <TextView android:text="Second language"
+            <TextView android:text="@string/person_secondlanguage_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -178,7 +178,7 @@
             android:layout_weight="1"
             android:orientation="vertical"
             >
-            <TextView android:text="Third language"
+            <TextView android:text="@string/person_thirdlanguage_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -197,7 +197,7 @@
             android:layout_weight="1"
             android:orientation="vertical"
             >
-            <TextView android:text="Other languages"
+            <TextView android:text="@string/person_otherlanguages_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -211,7 +211,7 @@
 
     </LinearLayout>
 
-    <TextView android:text=""
+    <TextView android:text="@string/person_mylocation_label"
         android:id="@+id/mylocation"
         android:layout_marginTop="20px"
         android:layout_width="wrap_content"
@@ -220,7 +220,7 @@
     <TextView
 
         android:layout_marginTop="20px"
-        android:text="Educated to"
+        android:text="@string/person_education_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -236,7 +236,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="okButton"
-        android:text="Ok" ></Button>
+        android:text="@string/person_ok_button" ></Button>
 
 </LinearLayout>
 

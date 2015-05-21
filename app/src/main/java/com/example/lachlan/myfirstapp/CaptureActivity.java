@@ -74,7 +74,8 @@ public class CaptureActivity extends ActionBarActivity {
         personid = intent.getIntExtra(HomeActivity.INTENT_PERSONID, 0);
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         Person p = db.getPerson(personid);
-        captureTitleTextView.setText("Capturing for: " + p.name);
+
+        captureTitleTextView.setText(R.string.capture_for_label + p.name);
     }
 
     @Override

@@ -50,7 +50,6 @@ public class SettingsActivity extends ActionBarActivity {
     private DropboxAPI<AndroidAuthSession> mDBApi;
     private boolean isLoggedIn;
 
-    //private Button playbutton;
     private TextView editTextTotalDiskSpace;
     private TextView editTextTotalDiskSpaceFree;
     private TextView dropboxAccessToken;
@@ -69,21 +68,24 @@ public class SettingsActivity extends ActionBarActivity {
         String diskSpace = DiskSpace.totalDiskSpace();
         String freeSpace = DiskSpace.totalAvailableDiskSpace();
 
-        editTextTotalDiskSpace.setText("Total disk size: " + diskSpace);
-        editTextTotalDiskSpaceFree.setText("Total available space: " + freeSpace);
+        String diskSpaceLabel = getResources().getString(R.string.settings_disk_size_label);
+        String diskFreeLabel = getResources().getString(R.string.settings_disk_free_label);
 
-        loggedIn(false);
+        editTextTotalDiskSpace.setText(diskSpaceLabel + ": " + diskSpace);
+        editTextTotalDiskSpaceFree.setText(diskFreeLabel + ": " + freeSpace);
+
+        /*loggedIn(false);
 
 
         AppKeyPair pair = new AppKeyPair(DropBoxSettings.APP_KEY, DropBoxSettings.APP_SECRET);
         AndroidAuthSession session = new AndroidAuthSession(pair);
         mDBApi = new DropboxAPI<AndroidAuthSession>(session);
-
+        */
     }
 
     public void loggedIn(boolean isLogged) {
-        isLoggedIn = isLogged;
-        loginButton.setText(isLogged ? "Log out of dropbox" : "Log in to dropbox");
+        //isLoggedIn = isLogged;
+        //loginButton.setText(isLogged ? "Log out of dropbox" : "Log in to dropbox");
     }
 
 
@@ -111,7 +113,7 @@ public class SettingsActivity extends ActionBarActivity {
     }
 
     public void connectToDropBox(android.view.View view) {
-        if (isLoggedIn) {
+        /*if (isLoggedIn) {
             mDBApi.getSession().unlink();
             loggedIn(false);
         } else {
@@ -126,7 +128,7 @@ public class SettingsActivity extends ActionBarActivity {
                 loggedIn(true);
             }
 
-        }
+        }*/
     }
 
 
@@ -134,7 +136,7 @@ public class SettingsActivity extends ActionBarActivity {
     protected void onResume() {
         super.onResume();
 
-        if (mDBApi == null) {
+        /*if (mDBApi == null) {
             Log.e("myfirstapp", "mDBApi is null in resume, what do I do now??");
         } else {
             AndroidAuthSession session = mDBApi.getSession();
@@ -153,14 +155,14 @@ public class SettingsActivity extends ActionBarActivity {
                     Log.e("myfirstapp", e.toString());
                 }
             }
-        }
+        }*/
     }
 
 
 
     public void uploadFile(android.view.View view)
     {
-        dropboxAccessToken.setText("Uploading...");
+        /*dropboxAccessToken.setText("Uploading...");
 
         //uploadFileButton.setEnabled(false);
 
@@ -202,7 +204,7 @@ public class SettingsActivity extends ActionBarActivity {
                     });
                 }
             }
-        }).start();
+        }).start();*/
     }
 }
 

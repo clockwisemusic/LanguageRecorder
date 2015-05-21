@@ -29,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:singleLine="true"
-        android:hint="@string/edit_message"></EditText>
+        android:hint="@string/capture_word_hint"></EditText>
 
     <LinearLayout
         android:gravity="center"
@@ -41,8 +41,7 @@
             android:id="@+id/recordbutton"
             android:layout_width="96dp"
             android:layout_height="wrap_content"
-
-            android:text="@string/btn_send"
+            android:text="@string/capture_record_button"
             android:onClick="recordButton">
 
         </Button>
@@ -50,12 +49,12 @@
             android:id="@+id/playbutton"
             android:layout_width="96dp"
             android:layout_height="wrap_content"
-            android:text="Play"
+            android:text="@string/capture_play_button"
             android:onClick="playButton"></Button>
         <Button
             android:layout_width="96dp"
             android:layout_height="wrap_content"
-            android:text="Stop"
+            android:text="@string/capture_stop_button"
             android:id="@+id/stopbutton"
             android:onClick="stopButton"
             >
@@ -70,22 +69,17 @@
         <Button
             android:onClick="backButton"
             android:id="@+id/backbutton"
-            android:text="Back"
+            android:text="@string/capture_back_button"
             android:layout_width="96dp"
             android:layout_height="wrap_content"></Button>
         <Button
             android:onClick="nextButton"
             android:id="@+id/nextbutton"
-            android:text="Next"
+            android:text="@string/capture_next_button"
             android:layout_alignParentRight="true"
             android:layout_width="96dp"
             android:layout_height="wrap_content"></Button>
     </LinearLayout>
-<!--
-    <TextView android:text="@string/hello_world"
-        android:textSize="12pt" android:layout_weight="1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
--->
+
 </LinearLayout>
 </ScrollView>

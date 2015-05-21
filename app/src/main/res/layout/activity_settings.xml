@@ -11,13 +11,13 @@
 
     <TextView android:id="@+id/total_disk_space_label"
         android:textSize="10pt"
-        android:text="Total disk space: "
+        android:text="@string/settings_disk_size_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <TextView android:id="@+id/total_disk_space_free_label"
         android:textSize="10pt"
-        android:text="Total disk space free: "
+        android:text="@string/settings_disk_free_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

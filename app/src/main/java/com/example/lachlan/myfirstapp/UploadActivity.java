@@ -55,7 +55,8 @@ public class UploadActivity extends ActionBarActivity {
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         Person[] people = db.getPeople();
 
-        dataInfo.setText("Number of people: " + people.length);
+        String numberOfPeopleText = getResources().getString(R.string.upload_number_of_people_label);
+        dataInfo.setText(numberOfPeopleText + ": " + people.length);
 
         progressText = "";
     }
@@ -92,17 +93,22 @@ public class UploadActivity extends ActionBarActivity {
         new Thread(new Runnable() {
             public void run() {
 
-                addMessage("starting upload...");
-                addMessage("uploading data...");
+                addMessage( getResources().getString(R.string.upload_starting_upload) + "...");
+                addMessage( getResources().getString(R.string.upload_uploading_data) + "...");
+
                 uploadData();
 
                 for (int i=0;i<CaptureActivity.totalItems;i++) {
                     String audioFilename = DiskSpace.getFilename(i+1);
-                    String shortname = "audio" + (i+1) + ".3gp";
-                    addMessage("uploading audio file: " + shortname);
-                    doFileUpload(audioFilename, shortname);
+                    File f = new File(audioFilename);
+                    if (f.exists()) {
+                        String shortname = "audio" + (i + 1) + ".3gp";
+                        String msg = getResources().getString(R.string.upload_uploading_audio);
+                        addMessage(msg + ": " + shortname);
+                        doFileUpload(audioFilename, shortname);
+                    }
                 }
-                addMessage("upload complete!");
+                addMessage( getResources().getString(R.string.upload_upload_complete));
 
             }
         }).start();

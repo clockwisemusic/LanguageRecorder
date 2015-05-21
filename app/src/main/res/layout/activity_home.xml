@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView android:text="Person selection"
+        <TextView android:text="@string/home_select_person"
             android:layout_marginBottom="50px"
             android:textSize="10pt"
             android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content" />
 
-            <Button android:text="edit"
+            <Button android:text="@string/home_edit_button"
                 android:onClick="editPersonButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
@@ -53,7 +53,7 @@
             android:layout_marginTop="50px"
             android:layout_marginBottom="50px"
             android:onClick="newPersonButton"
-            android:text="Add new person"
+            android:text="@string/home_add_person_button"
             android:id="@+id/add_person"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -62,7 +62,7 @@
             android:layout_marginBottom="50px"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Start Capturing"
+            android:text="@string/home_start_capturing_button"
             android:id="@+id/stopbutton"
             android:onClick="startButton"
 
@@ -70,7 +70,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Data Upload"
+            android:text="@string/home_data_upload_button"
             android:id="@+id/uploadbutton"
             android:onClick="uploadButton"
             />

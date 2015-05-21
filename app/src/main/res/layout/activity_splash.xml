@@ -19,7 +19,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/splashLogoImageView" />
 
-            <TextView android:text="Language Recorder"
+            <TextView android:text="@string/splash_title"
                 android:textColor="#ffffff"
                 android:paddingBottom="20px"
                 android:textSize="12pt"
@@ -29,8 +29,7 @@
             <Button
                 android:layout_width="96dp"
                 android:layout_height="wrap_content"
-                android:text="Start"
-                android:id="@+id/stopbutton"
+                android:text="@string/splash_start_button"
                 android:onClick="startButton"
                 />
         </LinearLayout>
