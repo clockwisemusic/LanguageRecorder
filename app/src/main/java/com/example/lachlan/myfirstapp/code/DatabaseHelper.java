@@ -185,25 +185,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return (PersonWord[]) items.toArray(new PersonWord[items.size()]);
     }
 
-    private PersonWord[] wordsForPerson(int personid, PersonWord[] allWords) {
-        List<PersonWord> items = new ArrayList<PersonWord>();
-        for (int i=0;i<allWords.length;i++) {
-            if (allWords[i].personid == personid) {
-                items.add(allWords[i]);
-            }
-        }
-        return (PersonWord[]) items.toArray(new PersonWord[items.size()]);
-    }
-
     public String getAllData() {
         Person[] people = getPeople();
         PersonWord[] allWords = getAllWords();
 
         String installID = Installation.id(_context);
-        String json = "{ InstallID='" + installID + "', Data=";
+        String json = "{ InstallID: \"" + installID + "\", Data: [";
 
-
-        json = json.concat("[");
         for (int i=0;i<people.length;i++) {
             Person p = people[i];
             PersonWord[] words = wordsForPerson(p.personid, allWords);
@@ -217,6 +205,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         json = json.concat("]}");
         return json;
     }
+
+    private PersonWord[] wordsForPerson(int personid, PersonWord[] allWords) {
+        List<PersonWord> items = new ArrayList<PersonWord>();
+        for (int i=0;i<allWords.length;i++) {
+            if (allWords[i].personid == personid) {
+                items.add(allWords[i]);
+            }
+        }
+        return (PersonWord[]) items.toArray(new PersonWord[items.size()]);
+    }
+
+
+
 
     private void resetDatabase()
     {

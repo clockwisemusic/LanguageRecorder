@@ -60,24 +60,27 @@ public class Person {
         addField(sb, "education", this.education, true, true);
         addField(sb, "latitude", this.latitude, false, true);
         addField(sb, "longitude", this.longitude, false, true);
-
         sb.append("words: [");
 
         for (int i=0;i<words.length;i++) {
             sb.append("{ itemid: ");
             sb.append(words[i].itemid);
-            sb.append(", word: '");
-            sb.append(words[i].word);
-            sb.append("', audiofilename: '");
-            sb.append(words[i].audiofilename);
-            sb.append("'}");
+            sb.append(", word: \"");
+            if (words[i].word != null) {
+                sb.append(words[i].word);
+            }
+            sb.append("\"");
+            sb.append(", audiofilename: \"");
+            if (words[i].audiofilename != null) {
+                sb.append(words[i].audiofilename);
+            }
+            sb.append("\"");
+            sb.append("}");
             if (i<words.length-1) {
                 sb.append(",");
             }
         }
         sb.append("]");
-
-
         sb.append("}");
         return sb.toString();
     }
@@ -88,11 +91,11 @@ public class Person {
             sb.append(name);
             sb.append(": ");
             if (useQuotes) {
-                sb.append("'");
+                sb.append("\"");
             }
             sb.append(value);
             if (useQuotes) {
-                sb.append("'");
+                sb.append("\"");
             }
             if (addComma) {
                 sb.append(",");

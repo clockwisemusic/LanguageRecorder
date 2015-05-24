@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.example.lachlan.myfirstapp.code.DatabaseHelper;
 import com.example.lachlan.myfirstapp.code.DiskSpace;
 import com.example.lachlan.myfirstapp.code.Person;
+import com.example.lachlan.myfirstapp.code.PersonWord;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -18,6 +19,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -37,7 +39,7 @@ import java.util.List;
 
 public class UploadActivity extends ActionBarActivity {
 
-    private String baseUrl = "http://10.0.0.31";
+    private String baseUrl = "http://10.0.0.14";
     private TextView uploadProgressTextView;
     private Button uploadFileButton;
     private String progressText;
@@ -98,16 +100,8 @@ public class UploadActivity extends ActionBarActivity {
 
                 uploadData();
 
-/*                for (int i=0;i<CaptureActivity.totalItems;i++) {
-                    String audioFilename = DiskSpace.getFilename(i+1);
-                    File f = new File(audioFilename);
-                    if (f.exists()) {
-                        String shortname = "audio" + (i + 1) + ".3gp";
-                        String msg = getResources().getString(R.string.upload_uploading_audio);
-                        addMessage(msg + ": " + shortname);
-                        doFileUpload(audioFilename, shortname);
-                    }
-                }*/
+//                uploadAudioData();
+
                 addMessage( getResources().getString(R.string.upload_upload_complete));
 
             }
@@ -129,17 +123,25 @@ public class UploadActivity extends ActionBarActivity {
 
     private void uploadData() {
         HttpClient httpclient = new DefaultHttpClient();
-        HttpPost httppost = new HttpPost(baseUrl + "/uploaddata.php");
+        HttpPost httppost = new HttpPost(baseUrl + "/api/languagedata");
 
         try {
 
             DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
             String json = dbHelper.getAllData();
 
+            Log.i("LanguageApp", json);
+
+            StringEntity se = new StringEntity(json);
+
+            httppost.setEntity(se);
+            httppost.setHeader("Accept", "application/json");
+            httppost.setHeader("Content-type", "application/json");
+
             // Add your data
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-            nameValuePairs.add(new BasicNameValuePair("json", json));
-            httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+//            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
+//            nameValuePairs.add(new BasicNameValuePair("json", json));
+  //          httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
@@ -154,7 +156,37 @@ public class UploadActivity extends ActionBarActivity {
 
     }
 
+    private void uploadAudioData() {
 
+        DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
+        PersonWord[] words = dbHelper.getAllWords();
+
+        if (words == null) {
+            return;
+        }
+
+        for (int i=0;i<words.length;i++) {
+            String audiofilename = words[i].audiofilename;
+
+            if (audiofilename != null)
+            {
+                if (audiofilename.length() > 0)
+                {
+                    String basePath = DiskSpace.getAudioFileBasePath();
+                    File f = new File(basePath + audiofilename);
+
+                    if (f.exists()) {
+
+                        String msg = getResources().getString(R.string.upload_uploading_audio);
+                        if (words[i].word != null && words.length > 0) {
+                            addMessage(msg + ": " + audiofilename);
+                        }
+                        doFileUpload(basePath + audiofilename, audiofilename);
+                    }
+                }
+            }
+        }
+    }
 
 
     private void doFileUpload(String audioFilename, String shortName){
