@@ -1,6 +1,7 @@
 package com.example.lachlan.myfirstapp;
 
 import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,8 +16,10 @@ import android.widget.TextView;
 import com.example.lachlan.myfirstapp.code.DatabaseHelper;
 import com.example.lachlan.myfirstapp.code.DiskSpace;
 import com.example.lachlan.myfirstapp.code.Person;
+import com.example.lachlan.myfirstapp.code.PersonWord;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class CaptureActivity extends ActionBarActivity {
 
@@ -25,6 +28,8 @@ public class CaptureActivity extends ActionBarActivity {
     // state variables
     private int itemid = 1;
     private int personid = 0;
+
+    private String audiofilename;
 
     public static int totalItems = 4;
 
@@ -75,7 +80,8 @@ public class CaptureActivity extends ActionBarActivity {
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         Person p = db.getPerson(personid);
 
-        captureTitleTextView.setText(R.string.capture_for_label + p.name);
+        String captureFor = getResources().getString(R.string.capture_for_label);
+        captureTitleTextView.setText(captureFor + ": " + p.name);
     }
 
     @Override
@@ -140,7 +146,7 @@ public class CaptureActivity extends ActionBarActivity {
 
     private void saveWord() {
         String word = editText.getText().toString();
-        dbHelper.saveWord(personid, itemid, word);
+        dbHelper.saveWord(personid, itemid, word, audiofilename);
     }
 
     public void backButton(android.view.View view){
@@ -180,8 +186,14 @@ public class CaptureActivity extends ActionBarActivity {
 
         imageView.setImageResource(pictureToUse);
 
-        String itemName = dbHelper.getWord(personid, itemid);
-        editText.setText(itemName);
+        PersonWord personWord = dbHelper.getWord(personid, itemid);
+        if (personWord != null) {
+            editText.setText(personWord.word);
+            audiofilename = personWord.audiofilename;
+        } else {
+            editText.setText(null);
+            audiofilename = null;
+        }
 
     }
 
@@ -196,8 +208,7 @@ public class CaptureActivity extends ActionBarActivity {
                                                             handleStopButton();
                                                         }
                                                     });
-            String filename = DiskSpace.getFilename(itemid);
-            mPlayer.setDataSource(filename);
+            mPlayer.setDataSource(DiskSpace.getAudioFileBasePath() + audiofilename);
             mPlayer.prepare();
             mPlayer.start();
         } catch (IOException e) {
@@ -217,9 +228,11 @@ public class CaptureActivity extends ActionBarActivity {
         mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
 
-        String filename = DiskSpace.getFilename(itemid);
+        if (audiofilename == null) {
+            audiofilename = UUID.randomUUID().toString().replaceAll("-", "").concat(".3gp");
+        }
 
-        mRecorder.setOutputFile(filename);
+        mRecorder.setOutputFile(DiskSpace.getAudioFileBasePath() + audiofilename);
         mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {

@@ -25,11 +25,15 @@ public class DiskSpace {
         return bytesToHuman(free);
     }
 
-    public static String getFilename(int picture) {
+    public static String getAudioFileBasePath() {
+        return Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
+    }
+
+/*    public static String getFilename(int picture) {
         String mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/audiorecordtest" + picture + ".3gp";
         return mFileName;
-    }
+    }*/
 
     private static String floatForm (double d)
     {

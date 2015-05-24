@@ -98,7 +98,7 @@ public class UploadActivity extends ActionBarActivity {
 
                 uploadData();
 
-                for (int i=0;i<CaptureActivity.totalItems;i++) {
+/*                for (int i=0;i<CaptureActivity.totalItems;i++) {
                     String audioFilename = DiskSpace.getFilename(i+1);
                     File f = new File(audioFilename);
                     if (f.exists()) {
@@ -107,7 +107,7 @@ public class UploadActivity extends ActionBarActivity {
                         addMessage(msg + ": " + shortname);
                         doFileUpload(audioFilename, shortname);
                     }
-                }
+                }*/
                 addMessage( getResources().getString(R.string.upload_upload_complete));
 
             }

@@ -21,6 +21,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String PERSON_TABLE_NAME = "person";
     private static final String PERSONCAPTURE_TABLE_NAME = "personcapture";
 
+    private Context _context;
+
     String createPersonTable = "create table " + PERSON_TABLE_NAME + " " +
             "(personid integer primary key autoincrement," +
             "name varchar, " +
@@ -32,16 +34,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "secondlanguage varchar, "  +
             "thirdlanguage varchar, "  +
             "otherlanguages varchar, "  +
-            "education varchar);";
+            "education varchar, " +
+            "latitude real," +
+            "longitude real);";
 
     String createPersonCaptureTable = "create table " + PERSONCAPTURE_TABLE_NAME + " " +
             "(personcaptureid integer primary key autoincrement," +
             "personid integer, " +
             "itemid integer, " +
-            "word varchar);";
+            "word varchar, " +
+            "audiofilename varchar);";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        this._context = context;
     }
 
     @Override
@@ -67,15 +73,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put("thirdlanguage", person.thirdlanguage);
         values.put("otherlanguages", person.otherlanguages);
         values.put("education", person.education);
+        values.put("latitude", person.latitude);
+        values.put("longitude", person.longitude);
         return values;
     }
 
     public void insertPerson(Person person) {
 
         SQLiteDatabase db = this.getWritableDatabase();
-//        db.execSQL(createPersonCaptureTable);
-//        db.execSQL("drop table person;");
-//       db.execSQL(createPersonTable);
 
         ContentValues values = getDbValues(person);
 
@@ -97,7 +102,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void saveWord(int personid, int pictureid, String word) {
+    public void saveWord(int personid, int pictureid, String word, String audiofilename) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -117,14 +122,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
             ContentValues values = new ContentValues();
             values.put("word", word );
+            values.put("audiofilename", audiofilename);
 
             db.update(PERSONCAPTURE_TABLE_NAME, values,  "personcaptureid = " + String.valueOf(personcaptureid), null);
         } else {
-            if (word != null) {
+            if (word != null || audiofilename != null) {
                 ContentValues values = new ContentValues();
                 values.put("word", word);
                 values.put("personid", personid);
                 values.put("itemid", pictureid);
+                values.put("audiofilename", audiofilename);
                 db.insert(PERSONCAPTURE_TABLE_NAME, null, values);
             }
         }
@@ -132,20 +139,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public String getWord(int personid, int pictureid) {
+    public PersonWord getWord(int personid, int pictureid) {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String sql = "select word from " + PERSONCAPTURE_TABLE_NAME +
+        String sql = "select personid, itemid, word, audiofilename from " + PERSONCAPTURE_TABLE_NAME +
                 " where personid = " + String.valueOf(personid) + " and " +
                 " itemid = " + String.valueOf(pictureid);
 
         Cursor c = db.rawQuery(sql, null);
 
-        String word = null;
+        PersonWord word = null;
 
         if (c.moveToNext()) {
-            word = c.getString(0);
+            word = new PersonWord(
+                    c.getInt(0),
+                    c.getInt(1),
+                    c.getString(2),
+                    c.getString(3)
+            );
         }
 
         db.close();
@@ -155,14 +167,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public PersonWord[] getAllWords() {
         SQLiteDatabase db = this.getReadableDatabase();
-        String sql = "select personid, itemid, word from " + PERSONCAPTURE_TABLE_NAME + " where word <> ''";
+        String sql = "select personid, itemid, word, audiofilename from " +
+                PERSONCAPTURE_TABLE_NAME + " where word <> '' or audiofilename <> ''";
+
         Cursor c = db.rawQuery(sql, null);
         List<PersonWord> items = new ArrayList<PersonWord>();
         while (c.moveToNext()) {
             PersonWord pw = new PersonWord(
                     c.getInt(0),
                     c.getInt(1),
-                    c.getString(2)
+                    c.getString(2),
+                    c.getString(3)
             );
             items.add(pw);
         }
@@ -184,7 +199,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Person[] people = getPeople();
         PersonWord[] allWords = getAllWords();
 
-        String json = "[";
+        String installID = Installation.id(_context);
+        String json = "{ InstallID='" + installID + "', Data=";
+
+
+        json = json.concat("[");
         for (int i=0;i<people.length;i++) {
             Person p = people[i];
             PersonWord[] words = wordsForPerson(p.personid, allWords);
@@ -195,16 +214,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
 
-        json = json.concat("]");
+        json = json.concat("]}");
         return json;
+    }
+
+    private void resetDatabase()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("drop table person;");
+        db.execSQL("drop table personcapture;");
+        db.execSQL(createPersonTable);
+        db.execSQL(createPersonCaptureTable);
+
+        db.close();
     }
 
     public Person[] getPeople() {
 
+        //resetDatabase();
+
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor c = db.rawQuery("select personid, name, age, gender, livesin, livesinyears,  " +
-                        "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education " +
+                        "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education, " +
+                        "latitude, longitude " +
                         "from " + PERSON_TABLE_NAME, null);
 
         List<Person> items = new ArrayList<Person>();
@@ -233,7 +267,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     c.getString(7),
                     c.getString(8),
                     c.getString(9),
-                    c.getString(10)
+                    c.getString(10),
+                    c.getDouble(11),
+                    c.getDouble(12)
                     );
 
             items.add(p);
@@ -249,7 +285,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor c = db.rawQuery("select personid, name, age, gender, livesin, livesinyears,  " +
-                "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education from " + PERSON_TABLE_NAME + "" +
+                "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education, " +
+                "latitude, longitude from " + PERSON_TABLE_NAME + "" +
                 " where personid = " + personId, null);
 
         Person p = null;
@@ -276,7 +313,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     c.getString(7),
                     c.getString(8),
                     c.getString(9),
-                    c.getString(10));
+                    c.getString(10),
+                    c.getDouble(11),
+                    c.getDouble(12)
+            );
         }
 
         db.close();

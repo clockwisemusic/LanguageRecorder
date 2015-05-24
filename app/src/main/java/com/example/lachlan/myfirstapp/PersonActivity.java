@@ -39,6 +39,8 @@ public class PersonActivity extends ActionBarActivity {
 
     private int personId;
     private Boolean editMode = false;
+    private Double latitude;
+    private Double longitude;
 
     LocationManager locationManager;
     LocationListener locationListener;
@@ -146,6 +148,17 @@ public class PersonActivity extends ActionBarActivity {
                 if (person.education.equalsIgnoreCase(universityText)) {
                     educatedToSpinner.setSelection(3);
                 }
+                if (person.latitude != null && person.longitude != null) {
+
+                    String myLocation = getResources().getString(R.string.person_mylocation_label);
+
+                    latitude = person.latitude;
+                    longitude = person.longitude;
+
+                    mylocationTextView.setText(myLocation + ": Lat "
+                            + person.latitude + ", Long " + person.longitude);
+
+                }
             }
 
             String windowTitle = getResources().getString(R.string.person_title_edit);
@@ -216,6 +229,8 @@ public class PersonActivity extends ActionBarActivity {
         person.thirdlanguage = thirdLanguageAutocomplete.getText().toString();
         person.otherlanguages = otherLanguagesAutocomplete.getText().toString();
         person.education = educatedToSpinner.getSelectedItem().toString();
+        person.latitude = latitude;
+        person.longitude = longitude;
 
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
         String message;
@@ -236,11 +251,18 @@ public class PersonActivity extends ActionBarActivity {
     }
 
     private void makeUseOfNewLocation(Location location) {
-        if (location != null) {
+
+        // only use new location if creating a new person and location exists (dur)
+
+        if (location != null && !editMode) {
             Log.i("LanguageApp", location.toString());
             String myLocation = getResources().getString(R.string.person_mylocation_label);
+
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+
             mylocationTextView.setText(myLocation + ": Lat "
-                    + location.getLatitude() + ", Long " + location.getLongitude());
+                    + latitude + ", Long " + longitude);
         }
     }
 

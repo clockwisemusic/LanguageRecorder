@@ -19,7 +19,7 @@
     <string name="capture_stop_button">Stop</string>
     <string name="capture_back_button">Back</string>
     <string name="capture_next_button">Next</string>
-    <string name="capture_for_label">Capturing for: </string>
+    <string name="capture_for_label">Capturing for</string>
 
     <string name="settings_title">Settings</string>
     <string name="settings_disk_size_label">Total disk size</string>
