@@ -113,9 +113,12 @@ public class PersonActivity extends ActionBarActivity {
     private void populatePersonDetails() {
         Intent intent = getIntent();
         personId = intent.getIntExtra(HomeActivity.INTENT_PERSONID, -1);
+        String windowTitle = getResources().getString(R.string.person_title);
 
         if (personId != -1) {
             editMode = true;
+            windowTitle = getResources().getString(R.string.person_title_edit);
+
             DatabaseHelper db = new DatabaseHelper(getApplicationContext());
             Person person = db.getPerson(personId);
             if (person != null) {
@@ -161,10 +164,9 @@ public class PersonActivity extends ActionBarActivity {
                 }
             }
 
-            String windowTitle = getResources().getString(R.string.person_title_edit);
-            getWindow().setTitle(windowTitle);
         }
 
+        this.setTitle(windowTitle);
     }
 
 

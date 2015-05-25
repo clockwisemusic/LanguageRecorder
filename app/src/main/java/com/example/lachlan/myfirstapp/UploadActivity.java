@@ -39,7 +39,7 @@ import java.util.List;
 
 public class UploadActivity extends ActionBarActivity {
 
-    private String baseUrl = "http://10.0.0.14";
+    private String baseUrl = "http://lachlanbarclay.net";
     private TextView uploadProgressTextView;
     private Button uploadFileButton;
     private String progressText;
@@ -100,7 +100,7 @@ public class UploadActivity extends ActionBarActivity {
 
                 uploadData();
 
-//                uploadAudioData();
+                uploadAudioData();
 
                 addMessage( getResources().getString(R.string.upload_upload_complete));
 
@@ -200,7 +200,7 @@ public class UploadActivity extends ActionBarActivity {
         byte[] buffer;
         int maxBufferSize = 1*1024*1024;
         String responseFromServer = "";
-        String urlString = baseUrl + "/uploadaudio.php";
+        String urlString = baseUrl + "/api/audiodata";
 
         try
         {

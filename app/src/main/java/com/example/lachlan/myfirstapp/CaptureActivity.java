@@ -2,10 +2,13 @@ package com.example.lachlan.myfirstapp;
 
 import android.content.Intent;
 import android.os.Environment;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,7 +38,6 @@ public class CaptureActivity extends ActionBarActivity {
 
     private boolean recording = false;
     private boolean playing = false;
-//    private String[] itemNames = new String[5];
 
     // the media players/recorders
     private MediaRecorder mRecorder = null;
@@ -50,6 +52,8 @@ public class CaptureActivity extends ActionBarActivity {
     private TextView captureTitleTextView;
 
     private DatabaseHelper dbHelper;
+
+    private String DEBUG_TAG = "LanguageApp";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +71,14 @@ public class CaptureActivity extends ActionBarActivity {
 
         dbHelper = new DatabaseHelper(getApplicationContext());
 
-        populateTitle();
+        populateWindowTitle();
 
         showPicture();
 
         getWindow().setSoftInputMode(android.view.WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
-    private void populateTitle() {
+    private void populateWindowTitle() {
         Intent intent = getIntent();
         personid = intent.getIntExtra(HomeActivity.INTENT_PERSONID, 0);
         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
@@ -101,9 +105,17 @@ public class CaptureActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        saveWord();
+    }
+
+
     public void playButton(android.view.View view)
     {
-        if (!playing && !recording) {
+        if (!playing && !recording && audiofilename != null) {
             recordbutton.setEnabled(false);
             playbutton.setEnabled(false);
             stopbutton.setEnabled(true);
@@ -127,6 +139,18 @@ public class CaptureActivity extends ActionBarActivity {
         handleStopButton();
     }
 
+    public void backButton(android.view.View view){
+
+        goBack();
+    }
+
+    public void nextButton(android.view.View view){
+
+        goForward();
+    }
+
+
+
     private void handleStopButton() {
 
         if (recording || playing) {
@@ -149,8 +173,9 @@ public class CaptureActivity extends ActionBarActivity {
         dbHelper.saveWord(personid, itemid, word, audiofilename);
     }
 
-    public void backButton(android.view.View view){
 
+
+    private void goBack() {
         saveWord();
 
         itemid--;
@@ -158,7 +183,7 @@ public class CaptureActivity extends ActionBarActivity {
         showPicture();
     }
 
-    public void nextButton(android.view.View view){
+    private void goForward() {
 
         saveWord();
 
@@ -203,15 +228,16 @@ public class CaptureActivity extends ActionBarActivity {
         mPlayer = new MediaPlayer();
         try {
             mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                                                        @Override
-                                                        public void onCompletion(MediaPlayer arg0) {
-                                                            handleStopButton();
-                                                        }
-                                                    });
+                @Override
+                public void onCompletion(MediaPlayer arg0) {
+                    handleStopButton();
+                }
+            });
             mPlayer.setDataSource(DiskSpace.getAudioFileBasePath() + audiofilename);
             mPlayer.prepare();
             mPlayer.start();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
         }
     }
 

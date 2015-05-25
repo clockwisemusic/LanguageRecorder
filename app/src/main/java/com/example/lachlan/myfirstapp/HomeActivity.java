@@ -23,6 +23,7 @@ public class HomeActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_home);
 
         selectPersonSpinner = (Spinner) findViewById(R.id.person_spinner);
@@ -51,9 +52,20 @@ public class HomeActivity extends ActionBarActivity {
                     break;
                 }
             }
+        } else {
+            // restore the last person selected
+            if (savedInstanceState != null) {
+                int selectedItem = savedInstanceState.getInt("selectedperson");
+                selectPersonSpinner.setSelection(selectedItem);
+            }
+
         }
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,6 +88,22 @@ public class HomeActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        int selectedItem = selectPersonSpinner.getSelectedItemPosition();
+        outState.putInt("selectedperson", selectedItem);
+    }
+
+    protected void onRestoreInstanceState (Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        if (savedInstanceState != null) {
+            int selectedItem = savedInstanceState.getInt("selectedperson");
+            selectPersonSpinner.setSelection(selectedItem);
+        }
     }
 
     public void startButton(android.view.View view) {

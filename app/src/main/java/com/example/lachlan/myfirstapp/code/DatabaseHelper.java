@@ -19,6 +19,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "lachtest";
     private static final String PERSON_TABLE_NAME = "person";
+    private static final String PERSON_COLUMNS = "personid, name, age, gender, livesin, livesinyears, " +
+            "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education, " +
+            "latitude, longitude";
+
     private static final String PERSONCAPTURE_TABLE_NAME = "personcapture";
 
     private Context _context;
@@ -237,41 +241,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor c = db.rawQuery("select personid, name, age, gender, livesin, livesinyears,  " +
-                        "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education, " +
-                        "latitude, longitude " +
-                        "from " + PERSON_TABLE_NAME, null);
+        Cursor c = db.rawQuery("select " + PERSON_COLUMNS + " from " + PERSON_TABLE_NAME, null);
 
         List<Person> items = new ArrayList<Person>();
 
         while (c.moveToNext()) {
 
-            Integer age = null;
-            Integer livesinyears = null;
-
-            if (!c.isNull(2))
-            {
-                age = c.getInt(2);
-            }
-            if (!c.isNull(5)) {
-                livesinyears = c.getInt(5);
-            }
-
-            Person p = new Person(
-                    c.getInt(0),
-                    c.getString(1),
-                    age,
-                    c.getString(3),
-                    c.getString(4),
-                    livesinyears,
-                    c.getString(6),
-                    c.getString(7),
-                    c.getString(8),
-                    c.getString(9),
-                    c.getString(10),
-                    c.getDouble(11),
-                    c.getDouble(12)
-                    );
+            Person p = getPersonFromCursor(c);
 
             items.add(p);
         }
@@ -281,43 +257,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return (Person[]) items.toArray(new Person[items.size()]);
     }
 
+    private Person getPersonFromCursor(Cursor c) {
+        Integer age = null;
+        Integer livesInYears = null;
+
+        if (!c.isNull(2))
+        {
+            age = c.getInt(2);
+        }
+        if (!c.isNull(5)) {
+            livesInYears = c.getInt(5);
+        }
+
+        return new Person(
+                c.getInt(0),
+                c.getString(1),
+                age,
+                c.getString(3),
+                c.getString(4),
+                livesInYears,
+                c.getString(6),
+                c.getString(7),
+                c.getString(8),
+                c.getString(9),
+                c.getString(10),
+                c.getDouble(11),
+                c.getDouble(12)
+        );
+    }
+
     public Person getPerson(int personId) {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor c = db.rawQuery("select personid, name, age, gender, livesin, livesinyears,  " +
-                "firstlanguage, secondlanguage, thirdlanguage, otherlanguages, education, " +
-                "latitude, longitude from " + PERSON_TABLE_NAME + "" +
+        Cursor c = db.rawQuery("select " + PERSON_COLUMNS + " from " + PERSON_TABLE_NAME + "" +
                 " where personid = " + personId, null);
 
         Person p = null;
+
         if (c.moveToNext()) {
-
-            Integer age = null;
-            Integer livesinyears = null;
-
-            if (!c.isNull(2)) {
-                age = c.getInt(2);
-            }
-            if (!c.isNull(5)) {
-                livesinyears = c.getInt(5);
-            }
-
-            p = new Person(
-                    c.getInt(0),
-                    c.getString(1),
-                    age,
-                    c.getString(3),
-                    c.getString(4),
-                    livesinyears,
-                    c.getString(6),
-                    c.getString(7),
-                    c.getString(8),
-                    c.getString(9),
-                    c.getString(10),
-                    c.getDouble(11),
-                    c.getDouble(12)
-            );
+            p = getPersonFromCursor(c);
         }
 
         db.close();
