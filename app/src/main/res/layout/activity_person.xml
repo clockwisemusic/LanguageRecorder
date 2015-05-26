@@ -22,6 +22,7 @@
         android:id="@+id/nameEditText"
         android:singleLine="true"
         android:hint=""
+        android:imeOptions="actionDone"
         android:inputType="textNoSuggestions"
         android:layout_marginBottom="10px"
         android:layout_width="match_parent"
@@ -46,6 +47,7 @@
                android:id="@+id/ageEditText"
                android:singleLine="true"
                android:inputType="number"
+               android:imeOptions="actionDone"
                android:layout_marginBottom="10px"
                android:layout_width="match_parent"
                android:layout_height="wrap_content" />
@@ -92,6 +94,7 @@
                 android:nextFocusDown="@+id/locationYearsEditText"
                 android:id="@+id/locationEditText"
                 android:singleLine="true"
+                android:imeOptions="actionDone"
                 android:layout_marginBottom="10px"
                 android:inputType="textNoSuggestions"
                 android:layout_width="match_parent"
@@ -115,6 +118,7 @@
                 android:nextFocusDown="@+id/autocomplete_first_language"
                 android:singleLine="true"
                 android:inputType="number"
+                android:imeOptions="actionDone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             </LinearLayout>
@@ -140,6 +144,7 @@
             <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/autocomplete_first_language"
                 android:nextFocusDown="@+id/autocomplete_second_language"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
@@ -159,6 +164,7 @@
             <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/autocomplete_second_language"
                 android:nextFocusDown="@+id/autocomplete_third_language"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
@@ -185,6 +191,7 @@
             <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/autocomplete_third_language"
                 android:nextFocusDown="@+id/autocomplete_other_languages"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
@@ -203,6 +210,7 @@
 
             <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/autocomplete_other_languages"
+                android:imeOptions="actionDone"
                 android:singleLine="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />

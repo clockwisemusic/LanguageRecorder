@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity
+            android:launchMode="singleTop"
             android:name=".HomeActivity"
             android:label="@string/home_title" >
         </activity>
