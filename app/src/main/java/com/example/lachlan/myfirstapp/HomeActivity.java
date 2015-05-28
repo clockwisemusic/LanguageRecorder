@@ -53,12 +53,22 @@ public class HomeActivity extends ActionBarActivity {
                 }
             }
         } else {
-            // restore the last person selected
-            if (savedInstanceState != null) {
-                int selectedItem = savedInstanceState.getInt("selectedperson");
-                selectPersonSpinner.setSelection(selectedItem);
-            }
 
+            String personDeletedName = intent.getStringExtra(PersonDeleteActivity.INTENT_PERSONDELETED);
+
+            if (personDeletedName != null) {
+                Context context = getApplicationContext();
+                Toast toast = Toast.makeText(context, personDeletedName + " has been deleted", Toast.LENGTH_SHORT);
+                toast.show();
+            }
+            else {
+
+                // restore the last person selected
+                if (savedInstanceState != null) {
+                    int selectedItem = savedInstanceState.getInt("selectedperson");
+                    selectPersonSpinner.setSelection(selectedItem);
+                }
+            }
         }
     }
 

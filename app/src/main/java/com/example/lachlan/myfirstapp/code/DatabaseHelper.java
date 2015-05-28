@@ -221,6 +221,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    public PersonWord[] getWordsForPerson(int personId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String sql = "select personid, itemid, word, audiofilename from " +
+                PERSONCAPTURE_TABLE_NAME + " where (word <> '' or audiofilename <> '') " +
+                "and personid = " + personId;
+
+        Cursor c = db.rawQuery(sql, null);
+        List<PersonWord> items = new ArrayList<PersonWord>();
+        while (c.moveToNext()) {
+            PersonWord pw = new PersonWord(
+                    c.getInt(0),
+                    c.getInt(1),
+                    c.getString(2),
+                    c.getString(3)
+            );
+            items.add(pw);
+        }
+        db.close();
+        return (PersonWord[]) items.toArray(new PersonWord[items.size()]);
+    }
+
+    public void deletePerson(int personId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.execSQL("delete from personcapture where personid=" + personId + ";");
+        db.execSQL("delete from person where personid=" + personId + ";");
+
+        db.close();
+    }
 
 
     private void resetDatabase()

@@ -10,8 +10,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,6 +26,7 @@ public class PersonActivity extends ActionBarActivity {
 
     public final static String INTENT_PERSONSAVED = "com.example.lachlan.myfirstapp.personsaved";
     public final static String INTENT_PERSONSAVEDID = "com.example.lachlan.myfirstapp.personsavedid";
+    public final static String INTENT_PERSONID = "com.example.lachlan.myfirstapp.personid";
 
     private EditText nameEditText;
     private EditText ageEditText;
@@ -36,6 +39,7 @@ public class PersonActivity extends ActionBarActivity {
     private Spinner genderSpinner;
     private Spinner educatedToSpinner;
     private TextView mylocationTextView;
+    private Button deleteButton;
 
     private int personId;
     private Boolean editMode = false;
@@ -68,6 +72,7 @@ public class PersonActivity extends ActionBarActivity {
         genderSpinner = (Spinner) findViewById(R.id.gender_spinner);
         educatedToSpinner = (Spinner) findViewById(R.id.educated_to_spinner);
         mylocationTextView = (TextView) findViewById(R.id.mylocation);
+        deleteButton = (Button) findViewById(R.id.delete_button);
 
         maleText = getResources().getString(R.string.person_gender_male);
         femaleText = getResources().getString(R.string.person_gender_female);
@@ -163,7 +168,8 @@ public class PersonActivity extends ActionBarActivity {
 
                 }
             }
-
+        } else {
+            deleteButton.setVisibility(View.INVISIBLE);
         }
 
         this.setTitle(windowTitle);
@@ -190,6 +196,23 @@ public class PersonActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onSaveInstanceState (Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putInt("editingperson", personId);
+    }
+
+
+
+    public void deleteButton(android.view.View view) {
+        if (editMode) {
+            Intent intent = new Intent(this, PersonDeleteActivity.class);
+            intent.putExtra(INTENT_PERSONID, personId);
+            startActivity(intent);
+        }
+
     }
 
     public void okButton(android.view.View view) {
@@ -248,6 +271,7 @@ public class PersonActivity extends ActionBarActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra(INTENT_PERSONSAVED, message);
         intent.putExtra(INTENT_PERSONSAVEDID, person.personid);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         startActivity(intent);
     }

@@ -39,6 +39,7 @@
     <string name="person_mylocation_label">My location</string>
     <string name="person_education_label">Educated to</string>
     <string name="person_ok_button">Ok</string>
+    <string name="person_delete_button">Delete</string>
     <string name="person_enter_name_toast">Please enter a name</string>
     <string name="person_updated_toast">Person updated</string>
     <string name="person_added_toast">Person added</string>
@@ -67,6 +68,11 @@
     <string name="upload_uploading_data">uploading data</string>
     <string name="upload_uploading_audio">uploading audio file</string>
     <string name="upload_upload_complete">upload complete</string>
+
+    <string name="delete_person_title">Delete Person</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
 
 
 </resources>
