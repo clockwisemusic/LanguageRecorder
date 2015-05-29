@@ -39,7 +39,8 @@ public class PersonDeleteActivity extends ActionBarActivity {
 
                 PersonWord[] words = db.getWordsForPerson(personId);
 
-                personNameTextView.setText(person.name + ", " + words.length + " items captured");
+                String captured = getResources().getString(R.string.delete_person_items_captured);
+                personNameTextView.setText(person.name + ", " + words.length + " " + captured);
 
                 personName = person.name;
             }

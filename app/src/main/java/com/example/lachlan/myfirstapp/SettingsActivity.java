@@ -52,6 +52,7 @@ public class SettingsActivity extends ActionBarActivity {
 
     private TextView editTextTotalDiskSpace;
     private TextView editTextTotalDiskSpaceFree;
+    private TextView editTextLanguage;
     private TextView dropboxAccessToken;
     private Button loginButton;
 
@@ -64,15 +65,19 @@ public class SettingsActivity extends ActionBarActivity {
         editTextTotalDiskSpaceFree = (TextView)findViewById(R.id.total_disk_space_free_label);
         dropboxAccessToken = (TextView)findViewById(R.id.dropbox_access_token);
         loginButton = (Button)findViewById(R.id.connect_dropbox_button);
+        editTextLanguage = (TextView)findViewById(R.id.language_label);
 
         String diskSpace = DiskSpace.totalDiskSpace();
         String freeSpace = DiskSpace.totalAvailableDiskSpace();
 
         String diskSpaceLabel = getResources().getString(R.string.settings_disk_size_label);
         String diskFreeLabel = getResources().getString(R.string.settings_disk_free_label);
+        String localeLabel = getResources().getString(R.string.settings_locale_label);
+        String locale = getResources().getConfiguration().locale.getDisplayName();
 
         editTextTotalDiskSpace.setText(diskSpaceLabel + ": " + diskSpace);
         editTextTotalDiskSpaceFree.setText(diskFreeLabel + ": " + freeSpace);
+        editTextLanguage.setText(localeLabel + ": " + locale);
 
         /*loggedIn(false);
 

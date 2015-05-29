@@ -1,5 +1,13 @@
 package com.example.lachlan.myfirstapp;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -92,22 +100,69 @@ public class UploadActivity extends ActionBarActivity {
 
     public void uploadToServer(android.view.View view) {
 
+//        addMessage( getResources().getString(R.string.upload_starting_upload) + "...");
+
+        /*Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                addNotification("Language App", "Upload Complete!");
+            }
+        }, 5000);*/
+
+  //      return;
         new Thread(new Runnable() {
             public void run() {
 
                 addMessage( getResources().getString(R.string.upload_starting_upload) + "...");
-                addMessage( getResources().getString(R.string.upload_uploading_data) + "...");
 
-                uploadData();
+                uploadDataToServer();
 
-                uploadAudioData();
-
-                addMessage( getResources().getString(R.string.upload_upload_complete));
 
             }
         }).start();
     }
 
+    private void addNotification(String title, String message) {
+
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.livru_timor_logo)
+                        .setContentTitle(title)
+                        .setContentText(message);
+
+        mBuilder.setAutoCancel(true);
+
+        // Creates an explicit intent for an Activity in your app
+        Intent resultIntent = new Intent(this, UploadActivity.class);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(UploadActivity.class);
+
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent resultPendingIntent =
+            stackBuilder.getPendingIntent(
+                    0,
+                    PendingIntent.FLAG_UPDATE_CURRENT
+            );
+
+        mBuilder.setContentIntent(resultPendingIntent);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        int notifyId = 1;
+
+        // notifyId allows you to update the notification later on.
+        mNotificationManager.notify(notifyId, mBuilder.build());
+    }
 
     private void addMessage(String message) {
         Date now = new Date();
@@ -121,7 +176,28 @@ public class UploadActivity extends ActionBarActivity {
 
     }
 
-    private void uploadData() {
+    private void uploadDataToServer() {
+
+        try {
+
+            uploadDbData();
+            uploadAudioData();
+
+            String success = getResources().getString(R.string.upload_upload_successful);
+            addMessage(success);
+            addNotification("Language App", success);
+
+        }
+        catch (Exception e) {
+            String failed = getResources().getString(R.string.upload_upload_failed);
+            addMessage(failed + ": " + e.getMessage());
+            addNotification("Language App", failed);
+        }
+
+    }
+
+
+    private void uploadDbData() throws Exception {
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(baseUrl + "/api/languagedata");
 
@@ -132,37 +208,35 @@ public class UploadActivity extends ActionBarActivity {
 
             Log.i("LanguageApp", json);
 
-            StringEntity se = new StringEntity(json);
+            StringEntity stringEntity = new StringEntity(json);
 
-            httppost.setEntity(se);
+            httppost.setEntity(stringEntity);
             httppost.setHeader("Accept", "application/json");
             httppost.setHeader("Content-type", "application/json");
 
-            // Add your data
-//            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(2);
-//            nameValuePairs.add(new BasicNameValuePair("json", json));
-  //          httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-
-            // Execute HTTP Post Request
             HttpResponse response = httpclient.execute(httppost);
 
-        } catch (ClientProtocolException e) {
-            Log.i("languageapp", e.toString());
-            // TODO Auto-generated catch block
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            Log.i("languageapp", e.toString());
-        }
+            //TODO do I need to read the response?
+            //return uploadAudioData();
 
+        } catch (ClientProtocolException e) {
+            //addNotification("Language App", "Data upload failed");
+            Log.i("languageapp", e.toString());
+            throw new Exception(e.getMessage());
+        } catch (IOException e) {
+            //addNotification("Language App", "Data upload failed");
+            Log.i("languageapp", e.toString());
+            throw new Exception(e.getMessage());
+        }
     }
 
-    private void uploadAudioData() {
+    private void uploadAudioData() throws Exception {
 
         DatabaseHelper dbHelper = new DatabaseHelper(getApplicationContext());
         PersonWord[] words = dbHelper.getAllWords();
 
         if (words == null) {
-            return;
+            return ; //true;
         }
 
         for (int i=0;i<words.length;i++) {
@@ -181,6 +255,7 @@ public class UploadActivity extends ActionBarActivity {
                         if (words[i].word != null && words.length > 0) {
                             addMessage(msg + ": " + audiofilename);
                         }
+
                         doFileUpload(basePath + audiofilename, audiofilename);
                     }
                 }
@@ -189,7 +264,7 @@ public class UploadActivity extends ActionBarActivity {
     }
 
 
-    private void doFileUpload(String audioFilename, String shortName){
+    private void doFileUpload(String audioFilename, String shortName) throws Exception {
         HttpURLConnection conn = null;
         DataOutputStream dos = null;
         DataInputStream inStream = null;
@@ -201,6 +276,8 @@ public class UploadActivity extends ActionBarActivity {
         int maxBufferSize = 1*1024*1024;
         String responseFromServer = "";
         String urlString = baseUrl + "/api/audiodata";
+
+        String failureMessage = null;
 
         try
         {
@@ -246,10 +323,12 @@ public class UploadActivity extends ActionBarActivity {
         catch (MalformedURLException ex)
         {
             Log.e("LanguageApp", "error: " + ex.getMessage(), ex);
+            failureMessage = ex.getMessage(); //throw new Exception(ex.getMessage());
         }
         catch (IOException ioe)
         {
             Log.e("LanguageApp", "error: " + ioe.getMessage(), ioe);
+            failureMessage = ioe.getMessage(); //throw new Exception(ioe.getMessage());
         }
 
 
@@ -267,6 +346,13 @@ public class UploadActivity extends ActionBarActivity {
         }
         catch (IOException ioex){
             Log.e("LanguageApp", "error: " + ioex.getMessage(), ioex);
+
+            if (failureMessage != null) {
+                failureMessage = failureMessage.concat(" " + ioex.getMessage());
+            } else  {
+                failureMessage = ioex.getMessage();
+            }
+            throw new Exception(failureMessage);
         }
     }
 

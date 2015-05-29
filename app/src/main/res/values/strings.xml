@@ -24,6 +24,7 @@
     <string name="settings_title">Settings</string>
     <string name="settings_disk_size_label">Total disk size</string>
     <string name="settings_disk_free_label">Total space free</string>
+    <string name="settings_locale_label">Locale</string>
 
     <string name="person_title">Add new person</string>
     <string name="person_title_edit">Edit person</string>
@@ -67,9 +68,12 @@
     <string name="upload_starting_upload">starting upload</string>
     <string name="upload_uploading_data">uploading data</string>
     <string name="upload_uploading_audio">uploading audio file</string>
-    <string name="upload_upload_complete">upload complete</string>
+    <string name="upload_upload_successful">Data upload was successful</string>
+    <string name="upload_upload_failed">Data upload failed</string>
 
     <string name="delete_person_title">Delete Person</string>
+    <string name="delete_person_items_captured">items captured</string>
+    <string name="delete_person_are_you_sure">Are you sure you want to delete</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
